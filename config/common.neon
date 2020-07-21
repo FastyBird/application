@@ -1,0 +1,49 @@
+#
+# Node DI configuration
+#
+# @license		More in license.md
+# @copyright	https://fastybird.com
+# @author		Adam Kadlec <adam.kadlec@fastybird.com>
+# @package		FastyBird:NodeBootstrap!
+# @subpackage	config
+# @since		0.1.0
+#
+# @date			08.03.20
+
+#########################
+# Used Nette extensions #
+#########################
+
+extensions:
+	contributteConsole	: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
+	contributteMonolog	: Contributte\Monolog\DI\MonologExtension
+	nodeBootstrap		: FastyBird\NodeBootstrap\DI\NodeBootstrapExtension
+
+##################################
+# Nette extensions configuration #
+##################################
+
+# Symfony console support extension
+###################################
+contributteConsole:
+	name: "FastyBird:MicroserviceNode!"
+	version: "1.0"
+	catchExceptions: true
+	autoExit: true
+	url: http://fastybird.com
+	lazy: false
+
+# Error logs extension
+######################
+contributteMonolog:
+	hook:
+		fromTracy: true
+		toTracy: false
+	channel:
+		default:
+			handlers:
+				- Monolog\Handler\StreamHandler('php://stdout', %logger.level%)
+				- Mangoweb\MonologTracyHandler\TracyHandler(%logsDir%)
+			processors:
+				- Monolog\Processor\MemoryPeakUsageProcessor
+				- Mangoweb\MonologTracyHandler\TracyProcessor
