@@ -31,6 +31,8 @@ class Bootstrap
 {
 
 	/**
+	 * @param string $envPrefix
+	 *
 	 * @return Configurator
 	 */
 	public static function boot(string $envPrefix = 'FB_NODE_PARAMETER_'): Configurator
