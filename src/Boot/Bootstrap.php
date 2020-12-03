@@ -35,7 +35,7 @@ class Bootstrap
 	 *
 	 * @return Configurator
 	 */
-	public static function boot(string $envPrefix = 'FB_NODE_PARAMETER_'): Configurator
+	public static function boot(string $envPrefix = 'FB_APP_PARAMETER_'): Configurator
 	{
 		self::initConstants();
 
@@ -58,7 +58,7 @@ class Bootstrap
 
 		$configurator->setTimeZone('UTC');
 
-		// Default node libs extension config
+		// Default extension config
 		$configurator->addConfig(__DIR__ . DS . '..' . DS . '..' . DS . 'config' . DS . 'common.neon');
 		$configurator->addConfig(__DIR__ . DS . '..' . DS . '..' . DS . 'config' . DS . 'defaults.neon');
 
@@ -91,7 +91,7 @@ class Bootstrap
 			define('FB_APP_DIR', __DIR__ . '/../../../../..');
 		}
 
-		// Configuring storage dir path
+		// Configuring resources dir path
 		if (getenv('FB_RESOURCES_DIR') !== false && !defined('FB_RESOURCES_DIR')) {
 			define('FB_RESOURCES_DIR', getenv('FB_RESOURCES_DIR'));
 
@@ -107,12 +107,12 @@ class Bootstrap
 			define('FB_STORAGE_DIR', FB_APP_DIR . DS . 'var');
 		}
 
-		// Check for temporary dir
+		// Check for storage dir
 		if (!is_dir(FB_STORAGE_DIR)) {
 			mkdir(FB_STORAGE_DIR, 0777, true);
 		}
 
-		// Configuring logs dir path
+		// Configuring temporary dir path
 		if (getenv('FB_TEMP_DIR') !== false && !defined('FB_TEMP_DIR')) {
 			define('FB_TEMP_DIR', getenv('FB_TEMP_DIR'));
 
@@ -133,7 +133,7 @@ class Bootstrap
 			define('FB_LOGS_DIR', FB_STORAGE_DIR . DS . 'logs');
 		}
 
-		// Check for temporary dir
+		// Check for logs dir
 		if (!is_dir(FB_LOGS_DIR)) {
 			mkdir(FB_LOGS_DIR, 0777, true);
 		}

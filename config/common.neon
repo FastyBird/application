@@ -30,7 +30,7 @@ contributteConsole:
 	version: "1.0"
 	catchExceptions: true
 	autoExit: true
-	url: http://www.fastybird.com
+	url: https://www.fastybird.com
 	lazy: false
 
 # Error logs extension

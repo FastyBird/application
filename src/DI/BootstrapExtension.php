@@ -23,7 +23,7 @@ use Sentry;
 use stdClass;
 
 /**
- * Node bootstrap extension container
+ * App bootstrap extension container
  *
  * @package        FastyBird:Bootstrap!
  * @subpackage     DI
@@ -55,10 +55,10 @@ class BootstrapExtension extends DI\CompilerExtension
 		$configuration = $this->getConfig();
 
 		if (
-			is_string(getenv('FB_NODE_PARAMETER__SENTRY_DSN'))
-			&& getenv('FB_NODE_PARAMETER__SENTRY_DSN') !== ''
+			is_string(getenv('FB_APP_PARAMETER__SENTRY_DSN'))
+			&& getenv('FB_APP_PARAMETER__SENTRY_DSN') !== ''
 		) {
-			$sentryDSN = getenv('FB_NODE_PARAMETER__SENTRY_DSN');
+			$sentryDSN = getenv('FB_APP_PARAMETER__SENTRY_DSN');
 
 		} elseif ($configuration->sentry->dsn !== null) {
 			$sentryDSN = $configuration->sentry->dsn;
