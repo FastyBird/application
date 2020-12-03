@@ -2,9 +2,9 @@
 # Node DI configuration
 #
 # @license		More in license.md
-# @copyright	https://fastybird.com
+# @copyright	https://www.fastybird.com
 # @author		Adam Kadlec <adam.kadlec@fastybird.com>
-# @package		FastyBird:NodeBootstrap!
+# @package		FastyBird:Bootstrap!
 # @subpackage	config
 # @since		0.1.0
 #
@@ -17,7 +17,7 @@
 extensions:
 	contributteConsole	: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
 	contributteMonolog	: Contributte\Monolog\DI\MonologExtension
-	nodeBootstrap		: FastyBird\NodeBootstrap\DI\NodeBootstrapExtension
+	fbBootstrap			: FastyBird\Bootstrap\DI\BootstrapExtension
 
 ##################################
 # Nette extensions configuration #
@@ -26,11 +26,11 @@ extensions:
 # Symfony console support extension
 ###################################
 contributteConsole:
-	name: "FastyBird:MicroserviceNode!"
+	name: "FastyBird:Application!"
 	version: "1.0"
 	catchExceptions: true
 	autoExit: true
-	url: http://fastybird.com
+	url: http://www.fastybird.com
 	lazy: false
 
 # Error logs extension

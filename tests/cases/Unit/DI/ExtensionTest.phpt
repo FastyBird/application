@@ -2,7 +2,7 @@
 
 namespace Tests\Cases;
 
-use FastyBird\NodeBootstrap\Boot;
+use FastyBird\Bootstrap\Boot;
 use Ninjify\Nunjuck\TestCase\BaseTestCase;
 use Tester\Assert;
 

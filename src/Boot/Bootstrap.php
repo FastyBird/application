@@ -4,25 +4,25 @@
  * Bootstrap.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:NodeBootstrap!
+ * @package        FastyBird:Bootstrap!
  * @subpackage     Boot
  * @since          0.1.0
  *
  * @date           08.03.20
  */
 
-namespace FastyBird\NodeBootstrap\Boot;
+namespace FastyBird\Bootstrap\Boot;
 
-use FastyBird\NodeBootstrap\Exceptions;
+use FastyBird\Bootstrap\Exceptions;
 use Nette\Configurator;
 use Tester;
 
 /**
  * Service bootstrap configurator
  *
- * @package        FastyBird:NodeBootstrap!
+ * @package        FastyBird:Bootstrap!
  * @subpackage     Boot
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>

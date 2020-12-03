@@ -1,19 +1,19 @@
 <?php declare(strict_types = 1);
 
 /**
- * NodeBootstrapExtension.php
+ * BootstrapExtension.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:NodeBootstrap!
+ * @package        FastyBird:Bootstrap!
  * @subpackage     DI
  * @since          0.1.0
  *
  * @date           08.03.20
  */
 
-namespace FastyBird\NodeBootstrap\DI;
+namespace FastyBird\Bootstrap\DI;
 
 use Monolog;
 use Nette;
@@ -25,12 +25,12 @@ use stdClass;
 /**
  * Node bootstrap extension container
  *
- * @package        FastyBird:NodeBootstrap!
+ * @package        FastyBird:Bootstrap!
  * @subpackage     DI
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class NodeBootstrapExtension extends DI\CompilerExtension
+class BootstrapExtension extends DI\CompilerExtension
 {
 
 	/**
@@ -125,13 +125,13 @@ class NodeBootstrapExtension extends DI\CompilerExtension
 	 */
 	public static function register(
 		Nette\Configurator $config,
-		string $extensionName = 'nodeBootstrap'
+		string $extensionName = 'Bootstrap'
 	): void {
 		$config->onCompile[] = function (
 			Nette\Configurator $config,
 			DI\Compiler $compiler
 		) use ($extensionName): void {
-			$compiler->addExtension($extensionName, new NodeBootstrapExtension());
+			$compiler->addExtension($extensionName, new BootstrapExtension());
 		};
 	}
 

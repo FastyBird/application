@@ -4,16 +4,16 @@
  * InvalidArgumentException.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:NodeBootstrap!
+ * @package        FastyBird:Bootstrap!
  * @subpackage     Exceptions
  * @since          0.1.0
  *
  * @date           08.03.20
  */
 
-namespace FastyBird\NodeBootstrap\Exceptions;
+namespace FastyBird\Bootstrap\Exceptions;
 
 use InvalidArgumentException as PHPInvalidArgumentException;
 

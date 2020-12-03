@@ -3,9 +3,9 @@
  * console.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:NodeBootstrap!
+ * @package        FastyBird:Bootstrap!
  * @subpackage     bin
  * @since          0.1.0
  *
@@ -16,7 +16,7 @@ declare(strict_types = 1);
 
 use Symfony\Component\Console;
 
-use FastyBird\NodeBootstrap\Boot;
+use FastyBird\Bootstrap\Boot;
 
 $autoload = null;
 
