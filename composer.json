@@ -1,7 +1,7 @@
 {
   "name": "fastybird/node-bootstrap",
   "type": "library",
-  "description": "FastyBird bootstrap for nodes",
+  "description": "FastyBird bootstrap for applications",
   "keywords": [
     "fastybird",
     "fb",
