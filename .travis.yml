@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 7.3
   - 7.4
   - nightly
 
@@ -45,7 +44,6 @@ jobs:
 
   allow_failures:
     - stage: Test Coverage
-    - php: 7.4snapshot
     - php: nightly
 
 sudo: false
