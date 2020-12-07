@@ -1,8 +1,8 @@
 {
-  "name": "fastybird/bootstrap",
-  "type": "library",
-  "description": "FastyBird application bootstrap",
-  "keywords": [
+  "name" : "fastybird/bootstrap",
+  "type" : "library",
+  "description" : "FastyBird application bootstrap",
+  "keywords" : [
     "fastybird",
     "fb",
     "libs",
@@ -11,72 +11,71 @@
     "nette"
   ],
 
-  "homepage": "https://www.fastybird.com",
+  "homepage" : "https://www.fastybird.com",
 
-  "license": "Apache-2.0",
+  "license" : "Apache-2.0",
 
-  "authors": [
+  "authors" : [
     {
-      "name": "FastyBird s.r.o.",
-      "email": "info@fastybird.com",
-      "homepage": "https://www.fastybird.com/"
+      "name" : "FastyBird s.r.o.",
+      "email" : "info@fastybird.com",
+      "homepage" : "https://www.fastybird.com/"
     },
     {
-      "name": "Adam Kadlec",
-      "email": "adam.kadlec@fastybird.com"
+      "name" : "Adam Kadlec",
+      "email" : "adam.kadlec@fastybird.com"
     }
   ],
 
-  "prefer-stable": true,
+  "prefer-stable" : true,
 
-  "minimum-stability": "dev",
+  "minimum-stability" : "dev",
 
-  "require": {
-    "php": ">=7.3.0",
-    "contributte/console": "^0.8",
-    "contributte/monolog": "^0.3",
-    "mangoweb/monolog-tracy-handler": "^0.4",
-    "nette/bootstrap": "^3.0",
-    "nette/di": "^3.0",
-    "nette/utils": "^3.0",
-    "sentry/sdk": "^2.1"
+  "require" : {
+    "php" : ">=7.3.0",
+    "contributte/console" : "^0.8",
+    "contributte/monolog" : "^0.3",
+    "mangoweb/monolog-tracy-handler" : "^0.4",
+    "nette/bootstrap" : "^3.0",
+    "nette/di" : "^3.0",
+    "nette/utils" : "^3.0",
+    "sentry/sdk" : "^2.1"
   },
 
-  "require-dev": {
-    "mockery/mockery": "^1.3",
-    "ninjify/nunjuck": "^0.3.0",
-    "ninjify/qa": "^0.10",
-    "pds/skeleton": "~1.0",
-    "phpstan/extension-installer": "^1.0",
-    "phpstan/phpstan": "^0.12",
-    "phpstan/phpstan-deprecation-rules": "^0.12",
-    "phpstan/phpstan-nette": "^0.12",
-    "phpstan/phpstan-strict-rules": "^0.12",
-    "tracy/tracy": "~2.4"
+  "require-dev" : {
+    "mockery/mockery" : "^1.3",
+    "ninjify/nunjuck" : "^0.3.0",
+    "ninjify/qa" : "^0.10",
+    "pds/skeleton" : "~1.0",
+    "phpstan/extension-installer" : "^1.0",
+    "phpstan/phpstan" : "^0.12",
+    "phpstan/phpstan-deprecation-rules" : "^0.12",
+    "phpstan/phpstan-nette" : "^0.12",
+    "phpstan/phpstan-strict-rules" : "^0.12",
+    "tracy/tracy" : "~2.4"
   },
 
-  "autoload": {
-    "psr-4": {
-      "FastyBird\\Bootstrap\\": "src/"
+  "autoload" : {
+    "psr-4" : {
+      "FastyBird\\Bootstrap\\" : "src/"
     }
   },
 
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\Cases\\": "tests/cases",
-      "Tests\\Fixtures\\": "tests/fixtures"
+  "autoload-dev" : {
+    "psr-4" : {
+      "Tests\\Cases\\" : "tests/cases",
+      "Tests\\Fixtures\\" : "tests/fixtures"
     }
   },
 
-  "config": {
-    "sort-packages": true
+  "config" : {
+    "sort-packages" : true
   },
 
-  "bin": [
+  "bin" : [
     "bin/fb-console",
     "bin/fb-console.php",
     "bin/fb-supervisor",
     "bin/fb-supervisor.php"
   ]
-
 }

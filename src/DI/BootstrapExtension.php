@@ -34,14 +34,34 @@ class BootstrapExtension extends DI\CompilerExtension
 {
 
 	/**
+	 * @param Nette\Configurator $config
+	 * @param string             $extensionName
+	 *
+	 * @return void
+	 */
+	public static function register(
+		Nette\Configurator $config,
+		string $extensionName = 'fbBootstrap'
+	): void {
+		$config->onCompile[] = function (
+			Nette\Configurator $config,
+			DI\Compiler $compiler
+		) use ($extensionName): void {
+			$compiler->addExtension($extensionName, new BootstrapExtension());
+		};
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function getConfigSchema(): Schema\Schema
 	{
 		return Schema\Expect::structure([
-			'sentry' => Schema\Expect::structure([
-				'dsn' => Schema\Expect::string(null),
-			]),
+			'sentry' => Schema\Expect::structure(
+				[
+					'dsn' => Schema\Expect::string(null),
+				]
+			),
 		]);
 	}
 
@@ -54,10 +74,7 @@ class BootstrapExtension extends DI\CompilerExtension
 		/** @var stdClass $configuration */
 		$configuration = $this->getConfig();
 
-		if (
-			is_string(getenv('FB_APP_PARAMETER__SENTRY_DSN'))
-			&& getenv('FB_APP_PARAMETER__SENTRY_DSN') !== ''
-		) {
+		if (is_string(getenv('FB_APP_PARAMETER__SENTRY_DSN')) && getenv('FB_APP_PARAMETER__SENTRY_DSN') !== '') {
 			$sentryDSN = getenv('FB_APP_PARAMETER__SENTRY_DSN');
 
 		} elseif ($configuration->sentry->dsn !== null) {
@@ -75,9 +92,7 @@ class BootstrapExtension extends DI\CompilerExtension
 
 			$sentryClientBuilderService = $builder->addDefinition('sentryClientBuilder')
 				->setFactory('Sentry\ClientBuilder::create')
-				->setArguments([
-					['dsn' => $sentryDSN],
-				]);
+				->setArguments([['dsn' => $sentryDSN],]);
 
 			$builder->addDefinition(null)
 				->setType(Sentry\ClientInterface::class)
@@ -110,29 +125,8 @@ class BootstrapExtension extends DI\CompilerExtension
 			/** @var DI\Definitions\ServiceDefinition $monologLoggerService */
 			$monologLoggerService = $builder->getDefinition($monologLoggerServiceName);
 
-			$monologLoggerService->addSetup('?->pushHandler(?)', [
-				'@self',
-				$sentryHandlerService,
-			]);
+			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService,]);
 		}
-	}
-
-	/**
-	 * @param Nette\Configurator $config
-	 * @param string $extensionName
-	 *
-	 * @return void
-	 */
-	public static function register(
-		Nette\Configurator $config,
-		string $extensionName = 'Bootstrap'
-	): void {
-		$config->onCompile[] = function (
-			Nette\Configurator $config,
-			DI\Compiler $compiler
-		) use ($extensionName): void {
-			$compiler->addExtension($extensionName, new BootstrapExtension());
-		};
 	}
 
 }

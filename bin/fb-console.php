@@ -14,16 +14,12 @@
 
 declare(strict_types = 1);
 
-use Symfony\Component\Console;
-
 use FastyBird\Bootstrap\Boot;
+use Symfony\Component\Console;
 
 $autoload = null;
 
-$autoloadFiles = [
-	__DIR__ . '/../vendor/autoload.php',
-	__DIR__ . '/../../../autoload.php',
-];
+$autoloadFiles = [__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php',];
 
 foreach ($autoloadFiles as $autoloadFile) {
 	if (file_exists($autoloadFile)) {
@@ -40,7 +36,8 @@ if (!$autoload) {
 
 require $autoload;
 
-$container = Boot\Bootstrap::boot()->createContainer();
+$container = Boot\Bootstrap::boot()
+	->createContainer();
 
 /** @var Console\Application $console */
 $console = $container->getByType(Console\Application::class);
