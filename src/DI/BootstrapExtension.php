@@ -35,7 +35,7 @@ class BootstrapExtension extends DI\CompilerExtension
 
 	/**
 	 * @param Nette\Configurator $config
-	 * @param string             $extensionName
+	 * @param string $extensionName
 	 *
 	 * @return void
 	 */
