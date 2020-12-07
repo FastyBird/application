@@ -92,7 +92,7 @@ class BootstrapExtension extends DI\CompilerExtension
 
 			$sentryClientBuilderService = $builder->addDefinition('sentryClientBuilder')
 				->setFactory('Sentry\ClientBuilder::create')
-				->setArguments([['dsn' => $sentryDSN],]);
+				->setArguments([['dsn' => $sentryDSN]]);
 
 			$builder->addDefinition(null)
 				->setType(Sentry\ClientInterface::class)
@@ -125,7 +125,7 @@ class BootstrapExtension extends DI\CompilerExtension
 			/** @var DI\Definitions\ServiceDefinition $monologLoggerService */
 			$monologLoggerService = $builder->getDefinition($monologLoggerServiceName);
 
-			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService,]);
+			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService]);
 		}
 	}
 
