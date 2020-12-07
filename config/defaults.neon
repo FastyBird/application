@@ -1,3 +1,15 @@
+#
+# App basic DI parameters
+#
+# @license		More in license.md
+# @copyright	https://www.fastybird.com
+# @author		Adam Kadlec <adam.kadlec@fastybird.com>
+# @package		FastyBird:Bootstrap!
+# @subpackage	config
+# @since		0.1.0
+#
+# @date			08.03.20
+
 parameters:
 	logger:
-		level: \Monolog\Logger::DEBUG
+		level: \Monolog\Logger::WARNING

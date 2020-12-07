@@ -1,13 +1,14 @@
 {
   "name": "fastybird/bootstrap",
   "type": "library",
-  "description": "FastyBird bootstrap for applications",
+  "description": "FastyBird application bootstrap",
   "keywords": [
     "fastybird",
     "fb",
     "libs",
     "library",
-    "bootstrap"
+    "bootstrap",
+    "nette"
   ],
 
   "homepage": "https://www.fastybird.com",
