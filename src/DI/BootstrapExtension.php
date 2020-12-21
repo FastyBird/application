@@ -86,19 +86,19 @@ class BootstrapExtension extends DI\CompilerExtension
 
 		// Sentry issues logger
 		if (is_string($sentryDSN) && $sentryDSN !== '') {
-			$builder->addDefinition(null)
+			$builder->addDefinition($this->prefix('sentry.handler'))
 				->setType(Sentry\Monolog\Handler::class)
 				->setArgument('level', Monolog\Logger::WARNING);
 
-			$sentryClientBuilderService = $builder->addDefinition('sentryClientBuilder')
+			$sentryClientBuilderService = $builder->addDefinition('sentry.clientBuilder')
 				->setFactory('Sentry\ClientBuilder::create')
 				->setArguments([['dsn' => $sentryDSN]]);
 
-			$builder->addDefinition(null)
+			$builder->addDefinition($this->prefix('sentry.client'))
 				->setType(Sentry\ClientInterface::class)
 				->setFactory([$sentryClientBuilderService, 'getClient']);
 
-			$builder->addDefinition(null)
+			$builder->addDefinition($this->prefix('sentry.hub'))
 				->setType(Sentry\State\Hub::class);
 		}
 	}
