@@ -1,6 +1,6 @@
 # FastyBird application bootstrap library
 
-[![Build Status](https://badgen.net/github/checks/FastyBird/bootstrap/master?cache=300&style=flast-square)](https://travis-ci.com/FastyBird/bootstrap)
+[![Build Status](https://badgen.net/github/checks/FastyBird/bootstrap/master?cache=300&style=flast-square)](https://github.com/FastyBird/bootstrap/actions)
 [![Code coverage](https://badgen.net/coveralls/c/github/FastyBird/bootstrap?cache=300&style=flast-square)](https://coveralls.io/r/FastyBird/bootstrap)
 ![PHP](https://badgen.net/packagist/php/FastyBird/bootstrap?cache=300&style=flast-square)
 [![Licence](https://badgen.net/packagist/license/FastyBird/bootstrap?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/bootstrap)
