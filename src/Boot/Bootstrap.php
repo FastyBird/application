@@ -70,6 +70,10 @@ class Bootstrap
 			$configurator->addConfig(FB_CONFIG_DIR . DS . 'defaults.neon');
 		}
 
+		if (file_exists(FB_CONFIG_DIR . DS . 'local.neon')) {
+			$configurator->addConfig(FB_CONFIG_DIR . DS . 'local.neon');
+		}
+
 		return $configurator;
 	}
 
