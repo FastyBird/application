@@ -38,15 +38,24 @@ if (!$autoload) {
 require $autoload;
 
 if (getenv('FB_APP_DIR') !== FALSE) {
-	$envDir = realpath(getenv('FB_APP_DIR') . '/env');
+	$envDirs = getenv('FB_APP_DIR') . '/env';
 
 } else {
-	$envDir = realpath(__DIR__ . '/../env');
+	$envDirs = [__DIR__ . '/../../env', __DIR__ . '/../../../../env'];
 }
 
-if ($envDir !== false) {
+$envLocation = null;
+
+foreach ($envDirs as $envDir) {
+	if (is_dir($envDir) && realpath($envDir) !== null) {
+		$envLocation = $envDir;
+		break;
+	}
+}
+
+if ($envLocation !== false) {
 	try {
-		$dotEnv = Dotenv::createImmutable($envDir);
+		$dotEnv = Dotenv::createImmutable($envLocation);
 		$dotEnv->load();
 
 	} catch (Throwable $ex) {
