@@ -14,6 +14,7 @@
 
 declare(strict_types = 1);
 
+use Dotenv\Dotenv;
 use FastyBird\Bootstrap\Boot;
 use Symfony\Component\Console;
 
@@ -35,6 +36,23 @@ if (!$autoload) {
 }
 
 require $autoload;
+
+if (getenv('FB_APP_DIR') !== FALSE) {
+	$envDir = realpath(getenv('FB_APP_DIR') . '/env');
+
+} else {
+	$envDir = realpath(__DIR__ . '/../env');
+}
+
+if ($envDir !== false) {
+	try {
+		$dotEnv = Dotenv::createImmutable($envDir);
+		$dotEnv->load();
+
+	} catch (Throwable $ex) {
+		// Env files could not be loaded
+	}
+}
 
 $container = Boot\Bootstrap::boot()
 	->createContainer();
