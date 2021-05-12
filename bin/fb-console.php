@@ -29,7 +29,7 @@ foreach ($autoloadFiles as $autoloadFile) {
 	}
 }
 
-if (!$autoload) {
+if ($autoload === null) {
 	echo "Autoload file not found; try 'composer dump-autoload' first." . PHP_EOL;
 
 	exit(1);
@@ -53,7 +53,7 @@ foreach ($envDirs as $envDir) {
 	}
 }
 
-if ($envLocation !== false) {
+if ($envLocation !== null) {
 	try {
 		$dotEnv = Dotenv::createImmutable($envLocation);
 		$dotEnv->load();
