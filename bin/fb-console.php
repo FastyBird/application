@@ -24,7 +24,7 @@ $autoloadFiles = [__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../auto
 
 foreach ($autoloadFiles as $autoloadFile) {
 	if (file_exists($autoloadFile)) {
-		$autoload = $autoloadFile;
+		$autoload = realpath($autoloadFile);
 		break;
 	}
 }
@@ -48,7 +48,7 @@ $envLocation = null;
 
 foreach ($envDirs as $envDir) {
 	if (is_dir($envDir) && realpath($envDir) !== null) {
-		$envLocation = $envDir;
+		$envLocation = realpath($envDir);
 		break;
 	}
 }
