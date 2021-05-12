@@ -43,9 +43,8 @@ contributteMonolog:
 		default:
 			handlers:
 				- Monolog\Handler\StreamHandler('php://stdout', %logger.level%)
+				- Monolog\Handler\RotatingFileHandler(%logsDir%/app.log, 10)
 				- Mangoweb\MonologTracyHandler\TracyHandler(%logsDir%)
-				- Monolog\Handler\RotatingFileHandler(%logsDir%/app.log)
-				- Monolog\Handler\ErrorLogHandler
 			processors:
 				- Monolog\Processor\MemoryPeakUsageProcessor
 				- Mangoweb\MonologTracyHandler\TracyProcessor
