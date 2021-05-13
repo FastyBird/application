@@ -20,7 +20,10 @@ use Symfony\Component\Console;
 
 $autoload = null;
 
-$autoloadFiles = [__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php',];
+$autoloadFiles = [
+	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php',
+	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'autoload.php',
+];
 
 foreach ($autoloadFiles as $autoloadFile) {
 	if (file_exists($autoloadFile)) {
@@ -38,28 +41,20 @@ if ($autoload === null) {
 require $autoload;
 
 if (isset($_ENV['FB_APP_DIR'])) {
-	$envDirs = $_ENV['FB_APP_DIR'] . '/env';
+	$envDirs = $_ENV['FB_APP_DIR'] . DIRECTORY_SEPARATOR . 'env';
 
 } else {
-	$envDirs = [__DIR__ . '/../../env', __DIR__ . '/../../../../env'];
+	$envDirs = [
+		__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'env',
+		__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'env',
+	];
 }
-
-$envLocation = null;
 
 foreach ($envDirs as $envDir) {
 	if (is_dir($envDir) && realpath($envDir) !== null) {
-		$envLocation = realpath($envDir);
+		$dotEnv = Dotenv::createImmutable(realpath($envDir));
+		$dotEnv->safeLoad();
 		break;
-	}
-}
-
-if ($envLocation !== null) {
-	try {
-		$dotEnv = Dotenv::createImmutable($envLocation);
-		$dotEnv->load();
-
-	} catch (Throwable $ex) {
-		// Env files could not be loaded
 	}
 }
 
