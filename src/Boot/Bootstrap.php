@@ -103,25 +103,12 @@ class Bootstrap
 			define('FB_RESOURCES_DIR', FB_APP_DIR . DS . 'resources');
 		}
 
-		// Configuring storage dir path
-		if (getenv('FB_STORAGE_DIR') !== false && !defined('FB_STORAGE_DIR')) {
-			define('FB_STORAGE_DIR', getenv('FB_STORAGE_DIR'));
-
-		} elseif (!defined('FB_STORAGE_DIR')) {
-			define('FB_STORAGE_DIR', FB_APP_DIR . DS . 'var');
-		}
-
-		// Check for storage dir
-		if (!is_dir(FB_STORAGE_DIR)) {
-			mkdir(FB_STORAGE_DIR, 0777, true);
-		}
-
 		// Configuring temporary dir path
 		if (getenv('FB_TEMP_DIR') !== false && !defined('FB_TEMP_DIR')) {
 			define('FB_TEMP_DIR', getenv('FB_TEMP_DIR'));
 
 		} elseif (!defined('FB_TEMP_DIR')) {
-			define('FB_TEMP_DIR', FB_STORAGE_DIR . DS . 'temp');
+			define('FB_TEMP_DIR', FB_APP_DIR . DS . 'var' . DS . 'temp');
 		}
 
 		// Check for temporary dir
@@ -134,7 +121,7 @@ class Bootstrap
 			define('FB_LOGS_DIR', getenv('FB_LOGS_DIR'));
 
 		} elseif (!defined('FB_LOGS_DIR')) {
-			define('FB_LOGS_DIR', FB_STORAGE_DIR . DS . 'logs');
+			define('FB_LOGS_DIR', FB_APP_DIR . DS . 'var' . DS . 'logs');
 		}
 
 		// Check for logs dir

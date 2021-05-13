@@ -63,10 +63,22 @@ if ($envLocation !== null) {
 	}
 }
 
-$container = Boot\Bootstrap::boot()
-	->createContainer();
+$boostrap = Boot\Bootstrap::boot();
+
+// Clear cache before startup
+if (defined('FB_TEMP_DIR') && is_dir(FB_TEMP_DIR)) {
+	$di = new RecursiveDirectoryIterator(FB_TEMP_DIR, FilesystemIterator::SKIP_DOTS);
+	$ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
+
+	foreach ($ri as $file) {
+		$file->isDir() ?  rmdir($file) : unlink($file);
+	}
+}
+
+$container = $boostrap->createContainer();
 
 /** @var Console\Application $console */
 $console = $container->getByType(Console\Application::class);
 
+// Clear cache
 exit($console->run());
