@@ -12,4 +12,4 @@
 
 parameters:
 	logger:
-		level: \Monolog\Logger::WARNING
+		level: Monolog\Logger::WARNING
