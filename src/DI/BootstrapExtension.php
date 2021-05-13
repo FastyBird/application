@@ -74,8 +74,12 @@ class BootstrapExtension extends DI\CompilerExtension
 		/** @var stdClass $configuration */
 		$configuration = $this->getConfig();
 
-		if (is_string(getenv('FB_APP_PARAMETER__SENTRY_DSN')) && getenv('FB_APP_PARAMETER__SENTRY_DSN') !== '') {
-			$sentryDSN = getenv('FB_APP_PARAMETER__SENTRY_DSN');
+		if (
+			isset($_ENV['FB_APP_PARAMETER__SENTRY_DSN'])
+			&& is_string($_ENV['FB_APP_PARAMETER__SENTRY_DSN'])
+			&& $_ENV['FB_APP_PARAMETER__SENTRY_DSN'] !== ''
+		) {
+			$sentryDSN = $_ENV['FB_APP_PARAMETER__SENTRY_DSN'];
 
 		} elseif ($configuration->sentry->dsn !== null) {
 			$sentryDSN = $configuration->sentry->dsn;

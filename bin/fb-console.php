@@ -37,8 +37,8 @@ if ($autoload === null) {
 
 require $autoload;
 
-if (getenv('FB_APP_DIR') !== false) {
-	$envDirs = getenv('FB_APP_DIR') . '/env';
+if (isset($_ENV['FB_APP_DIR'])) {
+	$envDirs = $_ENV['FB_APP_DIR'] . '/env';
 
 } else {
 	$envDirs = [__DIR__ . '/../../env', __DIR__ . '/../../../../env'];

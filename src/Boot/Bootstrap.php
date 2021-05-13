@@ -88,7 +88,10 @@ class Bootstrap
 		}
 
 		// Configuring APP dir path
-		if (getenv('FB_APP_DIR') !== false && !defined('FB_APP_DIR')) {
+		if (isset($_ENV['FB_APP_DIR']) && !defined('FB_APP_DIR')) {
+			define('FB_APP_DIR', $_ENV['FB_APP_DIR']);
+
+		} elseif (getenv('FB_APP_DIR') !== false && !defined('FB_APP_DIR')) {
 			define('FB_APP_DIR', getenv('FB_APP_DIR'));
 
 		} elseif (!defined('FB_APP_DIR')) {
@@ -96,7 +99,10 @@ class Bootstrap
 		}
 
 		// Configuring resources dir path
-		if (getenv('FB_RESOURCES_DIR') !== false && !defined('FB_RESOURCES_DIR')) {
+		if (isset($_ENV['FB_RESOURCES_DIR']) && !defined('FB_RESOURCES_DIR')) {
+			define('FB_RESOURCES_DIR', $_ENV['FB_RESOURCES_DIR']);
+
+		} elseif (getenv('FB_RESOURCES_DIR') !== false && !defined('FB_RESOURCES_DIR')) {
 			define('FB_RESOURCES_DIR', getenv('FB_RESOURCES_DIR'));
 
 		} elseif (!defined('FB_RESOURCES_DIR')) {
@@ -104,7 +110,10 @@ class Bootstrap
 		}
 
 		// Configuring temporary dir path
-		if (getenv('FB_TEMP_DIR') !== false && !defined('FB_TEMP_DIR')) {
+		if (isset($_ENV['FB_TEMP_DIR']) && !defined('FB_TEMP_DIR')) {
+			define('FB_TEMP_DIR', $_ENV['FB_TEMP_DIR']);
+
+		} elseif (getenv('FB_TEMP_DIR') !== false && !defined('FB_TEMP_DIR')) {
 			define('FB_TEMP_DIR', getenv('FB_TEMP_DIR'));
 
 		} elseif (!defined('FB_TEMP_DIR')) {
@@ -117,7 +126,10 @@ class Bootstrap
 		}
 
 		// Configuring logs dir path
-		if (getenv('FB_LOGS_DIR') !== false && !defined('FB_LOGS_DIR')) {
+		if (isset($_ENV['FB_LOGS_DIR']) && !defined('FB_LOGS_DIR')) {
+			define('FB_LOGS_DIR', $_ENV['FB_LOGS_DIR']);
+
+		} elseif (getenv('FB_LOGS_DIR') !== false && !defined('FB_LOGS_DIR')) {
 			define('FB_LOGS_DIR', getenv('FB_LOGS_DIR'));
 
 		} elseif (!defined('FB_LOGS_DIR')) {
@@ -130,7 +142,10 @@ class Bootstrap
 		}
 
 		// Configuring configuration dir path
-		if (getenv('FB_CONFIG_DIR') !== false && !defined('FB_CONFIG_DIR')) {
+		if (isset($_ENV['FB_CONFIG_DIR']) && !defined('FB_CONFIG_DIR')) {
+			define('FB_CONFIG_DIR', $_ENV['FB_CONFIG_DIR']);
+
+		} elseif (getenv('FB_CONFIG_DIR') !== false && !defined('FB_CONFIG_DIR')) {
 			define('FB_CONFIG_DIR', getenv('FB_CONFIG_DIR'));
 
 		} elseif (!defined('FB_CONFIG_DIR')) {
