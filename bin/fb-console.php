@@ -37,7 +37,7 @@ if ($autoload === null) {
 
 require $autoload;
 
-if (getenv('FB_APP_DIR') !== FALSE) {
+if (getenv('FB_APP_DIR') !== false) {
 	$envDirs = getenv('FB_APP_DIR') . '/env';
 
 } else {
@@ -75,7 +75,7 @@ if (defined('FB_TEMP_DIR') && is_dir(FB_TEMP_DIR)) {
 			continue;
 		}
 
-		$file->isDir() ?  rmdir((string) $file) : unlink((string) $file);
+		$file->isDir() ? rmdir((string) $file) : unlink((string) $file);
 	}
 }
 
