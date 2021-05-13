@@ -71,7 +71,11 @@ if (defined('FB_TEMP_DIR') && is_dir(FB_TEMP_DIR)) {
 	$ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
 
 	foreach ($ri as $file) {
-		$file->isDir() ?  rmdir($file) : unlink($file);
+		if (!$file->isDir() && basename((string) $file) === '.gitignore') {
+			continue;
+		}
+
+		$file->isDir() ?  rmdir((string) $file) : unlink((string) $file);
 	}
 }
 
