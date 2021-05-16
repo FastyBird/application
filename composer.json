@@ -33,13 +33,13 @@
 
   "require" : {
     "php": ">=7.4.0",
-    "contributte/console": "^0.8",
-    "contributte/monolog": "^0.3",
-    "mangoweb/monolog-tracy-handler": "^0.4",
-    "nette/bootstrap": "^3.0",
+    "contributte/console": "^0.9",
+    "contributte/monolog": "^0.5",
+    "mangoweb/monolog-tracy-handler": "^1.0",
+    "nette/bootstrap": "^3.1",
     "nette/di": "^3.0",
-    "nette/utils": "^3.0",
-    "sentry/sdk": "^2.1",
+    "nette/utils": "^3.2",
+    "sentry/sdk": "^3.1",
     "vlucas/phpdotenv": "^5.3"
   },
 

@@ -12,4 +12,6 @@
 
 parameters:
 	logger:
-		level: Monolog\Logger::WARNING
+		level: 400
+		rotatingFile: false
+		stdOut: false

@@ -42,9 +42,15 @@ contributteMonolog:
 	channel:
 		default:
 			handlers:
-				- Monolog\Handler\StreamHandler('php://stdout', %logger.level%)
-				- Monolog\Handler\RotatingFileHandler(%logsDir%/app.log, 10, %logger.level%)
 				- Mangoweb\MonologTracyHandler\TracyHandler(%logsDir%)
 			processors:
 				- Monolog\Processor\MemoryPeakUsageProcessor
 				- Mangoweb\MonologTracyHandler\TracyProcessor
+
+# Application bootstrap extension
+#################################
+fbBootstrap:
+    logging:
+        level:  %logger.level%
+        rotatingFile:  %logger.rotatingFile%
+        stdOut:  %logger.stdOut%
