@@ -18,7 +18,7 @@ final class ExtensionTest extends BaseTestCase
 	{
 		$configurator = Boot\Bootstrap::boot();
 
-		$container = $configurator->createContainer();
+		$configurator->createContainer();
 
 		Assert::true(true);
 	}
