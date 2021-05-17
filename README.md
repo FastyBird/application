@@ -3,7 +3,7 @@
 [![Build Status](https://badgen.net/github/checks/FastyBird/bootstrap/master?cache=300&style=flast-square)](https://github.com/FastyBird/bootstrap/actions)
 [![Code coverage](https://badgen.net/coveralls/c/github/FastyBird/bootstrap?cache=300&style=flast-square)](https://coveralls.io/r/FastyBird/bootstrap)
 ![PHP](https://badgen.net/packagist/php/FastyBird/bootstrap?cache=300&style=flast-square)
-[![Licence](https://badgen.net/packagist/license/FastyBird/bootstrap?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/bootstrap)
+[![Licence](https://badgen.net/packagist/license/FastyBird/bootstrap?cache=300&style=flast-square)](https://github.com/FastyBird/bootstrap/blob/master/LICENSE.md)
 [![Downloads total](https://badgen.net/packagist/dt/FastyBird/bootstrap?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/bootstrap)
 [![Latest stable](https://badgen.net/packagist/v/FastyBird/bootstrap/latest?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/bootstrap)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)

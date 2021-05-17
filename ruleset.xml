@@ -21,4 +21,5 @@
 
     <!--Exclude folders -->
     <exclude-pattern>/tests/tmp</exclude-pattern>
+    <exclude-pattern>tests/PHPStan/stubs/*</exclude-pattern>
 </ruleset>
