@@ -13,7 +13,7 @@
 parameters:
 	logger:
 		level: 400
-		rotatingFile: false
+		rotatingFile:
 		stdOut: false
 
 	sentry:

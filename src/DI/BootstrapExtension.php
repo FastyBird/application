@@ -66,7 +66,7 @@ class BootstrapExtension extends DI\CompilerExtension
 			),
 			'sentry'  => Schema\Expect::structure(
 				[
-					'dsn' => Schema\Expect::string(null),
+					'dsn' => Schema\Expect::string(null)->nullable(),
 				]
 			),
 		]);
