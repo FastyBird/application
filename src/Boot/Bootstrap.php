@@ -197,7 +197,7 @@ class Bootstrap
 
 		$parameters = [];
 
-		foreach (getenv() as $key => $value) {
+		foreach (array_merge($_ENV, getenv()) as $key => $value) {
 			if (strpos($key, $prefix) === 0) {
 				// Parse PREFIX{delimiter=_}{NAME-1}{delimiter=_}{NAME-N}
 				$keys = explode($delimiter, strtolower(substr($key, strlen($prefix))));

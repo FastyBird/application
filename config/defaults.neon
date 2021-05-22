@@ -15,3 +15,6 @@ parameters:
 		level: 400
 		rotatingFile: false
 		stdOut: false
+
+	sentry:
+		dsn:

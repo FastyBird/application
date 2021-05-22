@@ -54,3 +54,6 @@ fbBootstrap:
         level:  %logger.level%
         rotatingFile:  %logger.rotatingFile%
         stdOut:  %logger.stdOut%
+
+    sentry:
+        dsn: %sentry.dsn%

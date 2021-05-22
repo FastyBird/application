@@ -60,7 +60,7 @@ class BootstrapExtension extends DI\CompilerExtension
 			'logging' => Schema\Expect::structure(
 				[
 					'level'        => Schema\Expect::int(Monolog\Logger::ERROR),
-					'rotatingFile' => Schema\Expect::bool(false),
+					'rotatingFile' => Schema\Expect::string(null)->nullable(),
 					'stdOut'       => Schema\Expect::bool(false),
 				]
 			),
@@ -82,11 +82,11 @@ class BootstrapExtension extends DI\CompilerExtension
 		$configuration = $this->getConfig();
 
 		// Logger handlers
-		if ($configuration->logging->rotatingFile) {
+		if ($configuration->logging->rotatingFile !== null) {
 			$builder->addDefinition($this->prefix('logger.handler.rotatingFile'))
 				->setType(Monolog\Handler\RotatingFileHandler::class)
 				->setArguments([
-					'filename' => FB_LOGS_DIR . DS . 'app.log',
+					'filename' => FB_LOGS_DIR . DS . $configuration->logging->rotatingFile,
 					'maxFiles' => 10,
 					'level'    => $configuration->logging->level,
 				]);

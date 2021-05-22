@@ -10,7 +10,7 @@
 
 ## What is FastyBird application bootstrap library?
 
-This is a [Nette framework](https://nette.org) extension for bootstrapping [FastyBird](https://www.fastybird.com) IoT services
+This is a [Nette framework](https://nette.org) extension for application bootstrapping.
 
 ## Installation
 
@@ -22,7 +22,7 @@ $ composer require fastybird/bootstrap
 
 ## Documentation
 
-Learn how to build IoT services in [documentation](https://github.com/FastyBird/bootstrap/blob/master/docs/en/index.md).
+Learn how to configure your application in [documentation](https://github.com/FastyBird/bootstrap/blob/master/docs/en/index.md).
 
 ***
 Homepage [https://www.fastybird.com](https://www.fastybird.com) and repository [https://github.com/FastyBird/bootstrap](https://github.com/FastyBird/bootstrap).
