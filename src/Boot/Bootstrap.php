@@ -202,11 +202,6 @@ class Bootstrap
 				// Parse PREFIX{delimiter=_}{NAME-1}{delimiter=_}{NAME-N}
 				$keys = explode($delimiter, strtolower(substr($key, strlen($prefix))));
 
-				// Check if delimiter is ok and keys were exploded
-				if ($keys === false) {
-					continue;
-				}
-
 				// Make array structure
 				$map($parameters, $keys, $value);
 			}
