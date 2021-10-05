@@ -83,7 +83,7 @@ class BootstrapExtension extends DI\CompilerExtension
 
 		// Logger handlers
 		if ($configuration->logging->rotatingFile !== null) {
-			$builder->addDefinition($this->prefix('logger.handler.rotatingFile'))
+			$builder->addDefinition($this->prefix('logger.handler.rotatingFile'), new DI\Definitions\ServiceDefinition())
 				->setType(Monolog\Handler\RotatingFileHandler::class)
 				->setArguments([
 					'filename' => FB_LOGS_DIR . DS . $configuration->logging->rotatingFile,
@@ -93,7 +93,7 @@ class BootstrapExtension extends DI\CompilerExtension
 		}
 
 		if ($configuration->logging->stdOut) {
-			$builder->addDefinition($this->prefix('logger.handler.stdOut'))
+			$builder->addDefinition($this->prefix('logger.handler.stdOut'), new DI\Definitions\ServiceDefinition())
 				->setType(Monolog\Handler\StreamHandler::class)
 				->setArguments([
 					'stream' => 'php://stdout',
@@ -124,19 +124,19 @@ class BootstrapExtension extends DI\CompilerExtension
 
 		// Sentry issues logger
 		if (is_string($sentryDSN) && $sentryDSN !== '') {
-			$builder->addDefinition($this->prefix('sentry.handler'))
+			$builder->addDefinition($this->prefix('sentry.handler'), new DI\Definitions\ServiceDefinition())
 				->setType(Sentry\Monolog\Handler::class)
 				->setArgument('level', $configuration->logging->level);
 
-			$sentryClientBuilderService = $builder->addDefinition('sentry.clientBuilder')
+			$sentryClientBuilderService = $builder->addDefinition($this->prefix('sentry.clientBuilder'), new DI\Definitions\ServiceDefinition())
 				->setFactory('Sentry\ClientBuilder::create')
 				->setArguments([['dsn' => $sentryDSN]]);
 
-			$builder->addDefinition($this->prefix('sentry.client'))
+			$builder->addDefinition($this->prefix('sentry.client'), new DI\Definitions\ServiceDefinition())
 				->setType(Sentry\ClientInterface::class)
 				->setFactory([$sentryClientBuilderService, 'getClient']);
 
-			$builder->addDefinition($this->prefix('sentry.hub'))
+			$builder->addDefinition($this->prefix('sentry.hub'), new DI\Definitions\ServiceDefinition())
 				->setType(Sentry\State\Hub::class);
 		}
 	}
