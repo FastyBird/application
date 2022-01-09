@@ -19,13 +19,19 @@
     {
       "name" : "FastyBird s.r.o.",
       "email" : "code@fastybird.com",
-      "homepage" : "https://www.fastybird.com/"
+      "homepage" : "https://www.fastybird.com"
     },
     {
       "name" : "Adam Kadlec",
       "email" : "adam.kadlec@fastybird.com"
     }
   ],
+
+  "support": {
+    "email": "code@fastybird.com",
+    "issues": "https://github.com/FastyBird/bootstrap/issues",
+    "source" : "https://github.com/FastyBird/bootstrap"
+  },
 
   "prefer-stable" : true,
 
@@ -40,7 +46,7 @@
     "nette/di": "^3.0",
     "nette/utils": "^3.2",
     "sentry/sdk": "^3.1",
-    "vlucas/phpdotenv": "^5.3"
+    "vlucas/phpdotenv": "^5.4"
   },
 
   "require-dev" : {

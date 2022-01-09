@@ -11,10 +11,10 @@
 # @date			08.03.20
 
 parameters:
-	logger:
-		level: 400
-		rotatingFile:
-		stdOut: false
+    logger:
+        level: 400
+        rotatingFile:
+        stdOut: false
 
-	sentry:
-		dsn:
+    sentry:
+        dsn:
