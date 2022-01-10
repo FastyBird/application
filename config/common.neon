@@ -1,23 +1,23 @@
 #
 # App basic DI configuration
 #
-# @license		More in LICENSE.md
-# @copyright	https://www.fastybird.com
-# @author		Adam Kadlec <adam.kadlec@fastybird.com>
-# @package		FastyBird:Bootstrap!
-# @subpackage	config
-# @since		0.1.0
+# @license      More in LICENSE.md
+# @copyright    https://www.fastybird.com
+# @author       Adam Kadlec <adam.kadlec@fastybird.com>
+# @package      FastyBird:Bootstrap!
+# @subpackage   config
+# @since        0.1.0
 #
-# @date			08.03.20
+# @date         08.03.20
 
 #########################
 # Used Nette extensions #
 #########################
 
 extensions:
-    contributteConsole	: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
-    contributteMonolog	: Contributte\Monolog\DI\MonologExtension
-    fbBootstrap			: FastyBird\Bootstrap\DI\BootstrapExtension
+    contributteConsole  : Contributte\Console\DI\ConsoleExtension(%consoleMode%)
+    contributteMonolog  : Contributte\Monolog\DI\MonologExtension
+    fbBootstrap         : FastyBird\Bootstrap\DI\BootstrapExtension
 
 ##################################
 # Nette extensions configuration #
