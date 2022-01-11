@@ -15,6 +15,7 @@
 
 namespace FastyBird\Bootstrap\DI;
 
+use FastyBird\Bootstrap\Helpers;
 use Monolog;
 use Nette;
 use Nette\DI;
@@ -99,6 +100,11 @@ class BootstrapExtension extends DI\CompilerExtension
 					'stream' => 'php://stdout',
 					'level'  => $configuration->logging->level,
 				]);
+		}
+
+		if (class_exists('\Doctrine\DBAL\Connection') && class_exists('\Doctrine\ORM\EntityManagerInterface')) {
+			$builder->addDefinition($this->prefix('helpers.database'), new DI\Definitions\ServiceDefinition())
+				->setType(Helpers\Database::class);
 		}
 
 		if (
