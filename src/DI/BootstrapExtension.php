@@ -102,7 +102,7 @@ class BootstrapExtension extends DI\CompilerExtension
 				]);
 		}
 
-		if (class_exists('\Doctrine\DBAL\Connection') && class_exists('\Doctrine\ORM\EntityManagerInterface')) {
+		if (class_exists('\Doctrine\DBAL\Connection') && class_exists('\Doctrine\ORM\EntityManager')) {
 			$builder->addDefinition($this->prefix('helpers.database'), new DI\Definitions\ServiceDefinition())
 				->setType(Helpers\Database::class);
 		}
