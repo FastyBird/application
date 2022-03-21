@@ -35,11 +35,11 @@ class Database
 
 	use Nette\SmartObject;
 
-	/** @var Persistence\ManagerRegistry */
-	private Persistence\ManagerRegistry $managerRegistry;
+	/** @var Persistence\ManagerRegistry|null */
+	private ?Persistence\ManagerRegistry $managerRegistry;
 
 	public function __construct(
-		Persistence\ManagerRegistry $managerRegistry
+		?Persistence\ManagerRegistry $managerRegistry = null
 	) {
 		$this->managerRegistry = $managerRegistry;
 	}
@@ -87,6 +87,10 @@ class Database
 	 */
 	private function getEntityManager(): ?ORM\EntityManagerInterface
 	{
+		if ($this->managerRegistry === null) {
+			throw new Exceptions\InvalidStateException('Doctrine Manager registry service is missing')
+		}
+
 		$em = $this->managerRegistry->getManager();
 
 		if ($em instanceof ORM\EntityManagerInterface) {
