@@ -88,7 +88,7 @@ class Database
 	private function getEntityManager(): ?ORM\EntityManagerInterface
 	{
 		if ($this->managerRegistry === null) {
-			throw new Exceptions\InvalidStateException('Doctrine Manager registry service is missing')
+			throw new Exceptions\InvalidStateException('Doctrine Manager registry service is missing');
 		}
 
 		$em = $this->managerRegistry->getManager();
