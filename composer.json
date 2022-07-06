@@ -38,7 +38,7 @@
   "minimum-stability" : "stable",
 
   "require" : {
-    "php" : ">=7.4.0|>=8.0.0",
+    "php" : ">=8.0.0|>=8.1.0",
     "contributte/console" : "^0.9",
     "contributte/monolog" : "^0.5",
     "cweagans/composer-patches" : "^1.7",
@@ -78,7 +78,12 @@
   },
 
   "config" : {
-    "sort-packages" : true
+    "sort-packages" : true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "cweagans/composer-patches": true,
+      "phpstan/extension-installer": true
+    }
   },
 
   "bin" : [
