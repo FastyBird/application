@@ -21,7 +21,6 @@ jobs:
   php-qa:
     name: "Quality assurance for PHP code"
     runs-on: "${{ matrix.operating-system }}"
-    continue-on-error: "${{ matrix.experimental }}"
 
     strategy:
       fail-fast: false
