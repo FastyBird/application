@@ -20,7 +20,7 @@ This is a [Nette framework](https://nette.org) extension for application bootstr
 The best way to install **fastybird/bootstrap** is using [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require fastybird/bootstrap
+composer require fastybird/bootstrap
 ```
 
 ## Documentation
