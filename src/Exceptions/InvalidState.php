@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * InvalidArgumentException.php
+ * InvalidState.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -15,9 +15,9 @@
 
 namespace FastyBird\Bootstrap\Exceptions;
 
-use InvalidArgumentException as PHPInvalidArgumentException;
+use RuntimeException;
 
-class InvalidArgumentException extends PHPInvalidArgumentException implements IException
+class InvalidState extends RuntimeException implements Exception
 {
 
 }

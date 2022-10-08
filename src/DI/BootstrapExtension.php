@@ -22,6 +22,10 @@ use Nette\DI;
 use Nette\Schema;
 use Sentry;
 use stdClass;
+use function assert;
+use function class_exists;
+use function getenv;
+use function is_string;
 
 /**
  * App bootstrap extension container
@@ -34,62 +38,54 @@ use stdClass;
 class BootstrapExtension extends DI\CompilerExtension
 {
 
-	/**
-	 * @param Nette\Configurator $config
-	 * @param string $extensionName
-	 *
-	 * @return void
-	 */
 	public static function register(
 		Nette\Configurator $config,
-		string $extensionName = 'fbBootstrap'
-	): void {
-		$config->onCompile[] = function (
+		string $extensionName = 'fbBootstrap',
+	): void
+	{
+		$config->onCompile[] = static function (
 			Nette\Configurator $config,
-			DI\Compiler $compiler
+			DI\Compiler $compiler,
 		) use ($extensionName): void {
 			$compiler->addExtension($extensionName, new BootstrapExtension());
 		};
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function getConfigSchema(): Schema\Schema
 	{
 		return Schema\Expect::structure([
 			'logging' => Schema\Expect::structure(
 				[
-					'level'        => Schema\Expect::int(Monolog\Logger::ERROR),
+					'level' => Schema\Expect::int(Monolog\Logger::ERROR),
 					'rotatingFile' => Schema\Expect::string(null)->nullable(),
-					'stdOut'       => Schema\Expect::bool(false),
-				]
+					'stdOut' => Schema\Expect::bool(false),
+				],
 			),
-			'sentry'  => Schema\Expect::structure(
+			'sentry' => Schema\Expect::structure(
 				[
 					'dsn' => Schema\Expect::string(null)->nullable(),
-				]
+				],
 			),
 		]);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
-		/** @var stdClass $configuration */
 		$configuration = $this->getConfig();
+		assert($configuration instanceof stdClass);
 
 		// Logger handlers
 		if ($configuration->logging->rotatingFile !== null) {
-			$builder->addDefinition($this->prefix('logger.handler.rotatingFile'), new DI\Definitions\ServiceDefinition())
+			$builder->addDefinition(
+				$this->prefix('logger.handler.rotatingFile'),
+				new DI\Definitions\ServiceDefinition(),
+			)
 				->setType(Monolog\Handler\RotatingFileHandler::class)
 				->setArguments([
 					'filename' => FB_LOGS_DIR . DS . $configuration->logging->rotatingFile,
 					'maxFiles' => 10,
-					'level'    => $configuration->logging->level,
+					'level' => $configuration->logging->level,
 				]);
 		}
 
@@ -98,7 +94,7 @@ class BootstrapExtension extends DI\CompilerExtension
 				->setType(Monolog\Handler\StreamHandler::class)
 				->setArguments([
 					'stream' => 'php://stdout',
-					'level'  => $configuration->logging->level,
+					'level' => $configuration->logging->level,
 				]);
 		}
 
@@ -134,7 +130,10 @@ class BootstrapExtension extends DI\CompilerExtension
 				->setType(Sentry\Monolog\Handler::class)
 				->setArgument('level', $configuration->logging->level);
 
-			$sentryClientBuilderService = $builder->addDefinition($this->prefix('sentry.clientBuilder'), new DI\Definitions\ServiceDefinition())
+			$sentryClientBuilderService = $builder->addDefinition(
+				$this->prefix('sentry.clientBuilder'),
+				new DI\Definitions\ServiceDefinition(),
+			)
 				->setFactory('Sentry\ClientBuilder::create')
 				->setArguments([['dsn' => $sentryDSN]]);
 
@@ -147,22 +146,19 @@ class BootstrapExtension extends DI\CompilerExtension
 		}
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function beforeCompile(): void
 	{
 		parent::beforeCompile();
 
 		$builder = $this->getContainerBuilder();
-		/** @var stdClass $configuration */
 		$configuration = $this->getConfig();
+		assert($configuration instanceof stdClass);
 
-		/** @var string $monologLoggerServiceName */
 		$monologLoggerServiceName = $builder->getByType(Monolog\Logger::class);
+		assert(is_string($monologLoggerServiceName));
 
-		/** @var DI\Definitions\ServiceDefinition $monologLoggerService */
 		$monologLoggerService = $builder->getDefinition($monologLoggerServiceName);
+		assert($monologLoggerService instanceof DI\Definitions\ServiceDefinition);
 
 		if ($configuration->logging->rotatingFile) {
 			$rotatingFileHandler = $builder->getDefinition($this->prefix('logger.handler.rotatingFile'));
@@ -176,12 +172,11 @@ class BootstrapExtension extends DI\CompilerExtension
 			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $stdOutHandler]);
 		}
 
-		/** @var string|null $sentryHandlerServiceName */
-		$sentryHandlerServiceName = $builder->getByType(Sentry\Monolog\Handler::class, false);
+		$sentryHandlerServiceName = $builder->getByType(Sentry\Monolog\Handler::class);
 
 		if ($sentryHandlerServiceName !== null) {
-			/** @var DI\Definitions\ServiceDefinition $sentryHandlerService */
 			$sentryHandlerService = $builder->getDefinition($this->prefix('sentry.handler'));
+			assert($sentryHandlerService instanceof DI\Definitions\ServiceDefinition);
 
 			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService]);
 		}

@@ -18,6 +18,27 @@ namespace FastyBird\Bootstrap\Boot;
 use FastyBird\Bootstrap\Exceptions;
 use Nette\Configurator;
 use Tester;
+use function array_key_exists;
+use function array_merge;
+use function array_shift;
+use function class_exists;
+use function count;
+use function define;
+use function defined;
+use function explode;
+use function file_exists;
+use function getenv;
+use function implode;
+use function is_array;
+use function is_dir;
+use function is_numeric;
+use function mkdir;
+use function sprintf;
+use function strlen;
+use function strpos;
+use function strtolower;
+use function substr;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Service bootstrap configurator
@@ -30,11 +51,6 @@ use Tester;
 class Bootstrap
 {
 
-	/**
-	 * @param string $envPrefix
-	 *
-	 * @return Configurator
-	 */
 	public static function boot(string $envPrefix = 'FB_APP_PARAMETER_'): Configurator
 	{
 		self::initConstants();
@@ -46,7 +62,7 @@ class Bootstrap
 		$configurator->addParameters([
 			'tempDir' => FB_TEMP_DIR,
 			'logsDir' => FB_LOGS_DIR,
-			'appDir'  => FB_APP_DIR,
+			'appDir' => FB_APP_DIR,
 		]);
 
 		// Load parameters from environment
@@ -77,9 +93,6 @@ class Bootstrap
 		return $configurator;
 	}
 
-	/**
-	 * @return void
-	 */
 	private static function initConstants(): void
 	{
 		// Define shorter constant for OS directory separator
@@ -159,17 +172,15 @@ class Bootstrap
 	}
 
 	/**
-	 * @param string $prefix
-	 * @param string $delimiter
-	 *
-	 * @return mixed[]
+	 * @return array<mixed>
 	 */
 	private static function loadEnvParameters(
 		string $prefix,
-		string $delimiter = '_'
-	): array {
+		string $delimiter = '_',
+	): array
+	{
 		if ($delimiter === '') {
-			throw new Exceptions\InvalidArgumentException('Delimiter must be non-empty string');
+			throw new Exceptions\InvalidArgument('Delimiter must be non-empty string');
 		}
 
 		$prefix .= $delimiter;
@@ -182,7 +193,9 @@ class Bootstrap
 			$key = array_shift($keys);
 
 			if (!is_array($array)) {
-				throw new Exceptions\InvalidStateException(sprintf('Invalid structure for key "%s" value "%s"', implode($keys), $value));
+				throw new Exceptions\InvalidState(
+					sprintf('Invalid structure for key "%s" value "%s"', implode($keys), $value),
+				);
 			}
 
 			if (!array_key_exists($key, $array)) {
