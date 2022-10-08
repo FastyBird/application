@@ -1,7 +1,5 @@
 # FastyBird application bootstrap library
 
-***
-
 [![Build Status](https://badgen.net/github/checks/FastyBird/bootstrap/main?cache=300&style=flast-square)](https://github.com/FastyBird/bootstrap/actions)
 [![Licence](https://badgen.net/github/license/FastyBird/bootstrap?cache=300&style=flast-square)](https://github.com/FastyBird/bootstrap/blob/main/LICENSE.md)
 [![Code coverage](https://badgen.net/coveralls/c/github/FastyBird/bootstrap?cache=300&style=flast-square)](https://coveralls.io/r/FastyBird/bootstrap)
