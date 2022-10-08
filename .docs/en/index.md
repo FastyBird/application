@@ -2,6 +2,8 @@
 
 The purpose of this extension is to prepare basic bootstrap for you application with some default useful extensions.
 
+***
+
 ## Installation
 
 The best way to install **fastybird/bootstrap** is using [Composer](http://getcomposer.org/):

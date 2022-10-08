@@ -20,7 +20,7 @@ $stdOut = STDOUT;
 fwrite($stdOut, "READY\n");
 
 while (true) {
-	if (($line = trim(fgets($stdIn))) === false) {
+	if (($line = trim(strval(fgets($stdIn)))) === false) {
 		continue;
 	}
 

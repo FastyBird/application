@@ -17,12 +17,13 @@ declare(strict_types = 1);
 use Dotenv\Dotenv;
 use FastyBird\Bootstrap\Boot;
 use Symfony\Component\Console;
+use const DIRECTORY_SEPARATOR as DS;
 
 $autoload = null;
 
 $autoloadFiles = [
-	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php',
-	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'autoload.php',
+	__DIR__ . DS . '..' . DS . 'vendor' . DS . 'autoload.php',
+	__DIR__ . DS . '..' . DS . '..' . DS . '..' . DS . 'autoload.php',
 ];
 
 foreach ($autoloadFiles as $autoloadFile) {
@@ -41,17 +42,17 @@ if ($autoload === null) {
 require $autoload;
 
 if (isset($_ENV['FB_APP_DIR'])) {
-	$envDirs = $_ENV['FB_APP_DIR'] . DIRECTORY_SEPARATOR . 'env';
+	$envDirs = [$_ENV['FB_APP_DIR'] . DS . 'env'];
 
 } else {
 	$envDirs = [
-		__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'env',
-		__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'env',
+		__DIR__ . DS . '..' . DS . '..' . DS . 'env',
+		__DIR__ . DS . '..' . DS . '..' . DS . '..' . DS . '..' . DS . 'env',
 	];
 }
 
 foreach ($envDirs as $envDir) {
-	if (is_dir($envDir) && realpath($envDir) !== null) {
+	if (is_dir($envDir) && realpath($envDir) !== false) {
 		$dotEnv = Dotenv::createImmutable(realpath($envDir));
 		$dotEnv->safeLoad();
 		break;

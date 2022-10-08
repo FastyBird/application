@@ -172,7 +172,7 @@ class Bootstrap
 	}
 
 	/**
-	 * @return array<mixed>
+	 * @phpstan-return Array<mixed>
 	 */
 	private static function loadEnvParameters(
 		string $prefix,

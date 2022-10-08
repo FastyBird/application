@@ -73,8 +73,7 @@
 
   "autoload-dev" : {
     "psr-4" : {
-      "Tests\\Cases\\" : "tests/cases",
-      "Tests\\Fixtures\\" : "tests/fixtures"
+      "Tests\\Cases\\Unit\\" : "tests/cases/unit"
     }
   },
 
