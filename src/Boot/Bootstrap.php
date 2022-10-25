@@ -16,19 +16,20 @@
 namespace FastyBird\Bootstrap\Boot;
 
 use FastyBird\Bootstrap\Exceptions;
-use Nette\Configurator;
 use Tester;
 use function array_key_exists;
 use function array_merge;
 use function array_shift;
 use function class_exists;
 use function count;
+use function date_default_timezone_set;
 use function define;
 use function defined;
 use function explode;
 use function file_exists;
 use function getenv;
 use function implode;
+use function ini_set;
 use function is_array;
 use function is_dir;
 use function is_numeric;
@@ -51,28 +52,29 @@ use const DIRECTORY_SEPARATOR;
 class Bootstrap
 {
 
-	public static function boot(string $envPrefix = 'FB_APP_PARAMETER_'): Configurator
+	public static function boot(string $envPrefix = 'FB_APP_PARAMETER_'): ManualConfigurator
 	{
 		self::initConstants();
 
 		// Create app configurator
-		$configurator = new Configurator();
+		$configurator = new ManualConfigurator(FB_APP_DIR);
 
 		// Define variables
-		$configurator->addParameters([
+		$configurator->addStaticParameters([
 			'tempDir' => FB_TEMP_DIR,
 			'logsDir' => FB_LOGS_DIR,
 			'appDir' => FB_APP_DIR,
 		]);
 
 		// Load parameters from environment
-		$configurator->addParameters(self::loadEnvParameters($envPrefix));
+		$configurator->addStaticParameters(self::loadEnvParameters($envPrefix));
 
 		if (!class_exists('\Tester\Environment') || getenv(Tester\Environment::RUNNER) === false) {
-			$configurator->enableTracy(FB_LOGS_DIR);
+			$configurator->enableDebugger();
 		}
 
-		$configurator->setTimeZone('UTC');
+		date_default_timezone_set('UTC');
+		@ini_set('date.timezone', 'UTC'); // @ - function may be disabled
 
 		// Default extension config
 		$configurator->addConfig(__DIR__ . DS . '..' . DS . '..' . DS . 'config' . DS . 'common.neon');
