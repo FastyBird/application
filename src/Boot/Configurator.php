@@ -30,6 +30,7 @@ use function is_file;
 use function is_subclass_of;
 use function strval;
 use function unlink;
+use const DIRECTORY_SEPARATOR;
 use const PHP_RELEASE_VERSION;
 use const PHP_VERSION_ID;
 
@@ -105,7 +106,7 @@ class Configurator extends Bootstrap\Configurator
 	{
 		$this->forceReloadContainer
 		&& !class_exists($containerClass = $loader->getClassName($containerKey), false)
-		&& is_file($file = $buildDir . DIRECTORY_SEPARATOR. $containerClass . '.php')
+		&& is_file($file = $buildDir . DIRECTORY_SEPARATOR . $containerClass . '.php')
 		&& unlink($file);
 	}
 

@@ -22,14 +22,12 @@ use function array_merge;
 use function array_shift;
 use function class_exists;
 use function count;
-use function date_default_timezone_set;
 use function define;
 use function defined;
 use function explode;
 use function file_exists;
 use function getenv;
 use function implode;
-use function ini_set;
 use function is_array;
 use function is_dir;
 use function is_numeric;
@@ -39,7 +37,7 @@ use function strlen;
 use function strpos;
 use function strtolower;
 use function substr;
-use const DIRECTORY_SEPARATOR;
+use const DIRECTORY_SEPARATOR as DS;
 
 /**
  * Service bootstrap configurator
@@ -52,29 +50,28 @@ use const DIRECTORY_SEPARATOR;
 class Bootstrap
 {
 
-	public static function boot(string $envPrefix = 'FB_APP_PARAMETER_'): ManualConfigurator
+	public static function boot(string $envPrefix = 'FB_APP_PARAMETER_'): Configurator
 	{
 		self::initConstants();
 
 		// Create app configurator
-		$configurator = new ManualConfigurator(FB_APP_DIR);
+		$configurator = new Configurator();
 
 		// Define variables
-		$configurator->addStaticParameters([
+		$configurator->addParameters([
 			'tempDir' => FB_TEMP_DIR,
 			'logsDir' => FB_LOGS_DIR,
 			'appDir' => FB_APP_DIR,
 		]);
 
 		// Load parameters from environment
-		$configurator->addStaticParameters(self::loadEnvParameters($envPrefix));
+		$configurator->addParameters(self::loadEnvParameters($envPrefix));
 
 		if (!class_exists('\Tester\Environment') || getenv(Tester\Environment::RUNNER) === false) {
-			$configurator->enableDebugger();
+			$configurator->enableTracy(FB_LOGS_DIR);
 		}
 
-		date_default_timezone_set('UTC');
-		@ini_set('date.timezone', 'UTC'); // @ - function may be disabled
+		$configurator->setTimeZone('UTC');
 
 		// Default extension config
 		$configurator->addConfig(__DIR__ . DS . '..' . DS . '..' . DS . 'config' . DS . 'common.neon');
@@ -97,11 +94,6 @@ class Bootstrap
 
 	private static function initConstants(): void
 	{
-		// Define shorter constant for OS directory separator
-		if (!defined('DS')) {
-			define('DS', DIRECTORY_SEPARATOR);
-		}
-
 		// Configuring APP dir path
 		if (isset($_ENV['FB_APP_DIR']) && !defined('FB_APP_DIR')) {
 			define('FB_APP_DIR', $_ENV['FB_APP_DIR']);
@@ -110,7 +102,7 @@ class Bootstrap
 			define('FB_APP_DIR', getenv('FB_APP_DIR'));
 
 		} elseif (!defined('FB_APP_DIR')) {
-			define('FB_APP_DIR', __DIR__ . '/../../../../..');
+			define('FB_APP_DIR', __DIR__ . DS . '..' . DS . '..' . DS . '..' . DS . '..' . DS . '..');
 		}
 
 		// Configuring resources dir path
