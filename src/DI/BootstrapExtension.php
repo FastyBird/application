@@ -26,6 +26,7 @@ use function assert;
 use function class_exists;
 use function getenv;
 use function is_string;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * App bootstrap extension container
@@ -83,7 +84,7 @@ class BootstrapExtension extends DI\CompilerExtension
 			)
 				->setType(Monolog\Handler\RotatingFileHandler::class)
 				->setArguments([
-					'filename' => FB_LOGS_DIR . DS . $configuration->logging->rotatingFile,
+					'filename' => FB_LOGS_DIR . DIRECTORY_SEPARATOR . $configuration->logging->rotatingFile,
 					'maxFiles' => 10,
 					'level' => $configuration->logging->level,
 				]);
@@ -154,31 +155,37 @@ class BootstrapExtension extends DI\CompilerExtension
 		$configuration = $this->getConfig();
 		assert($configuration instanceof stdClass);
 
-		$monologLoggerServiceName = $builder->getByType(Monolog\Logger::class);
-		assert(is_string($monologLoggerServiceName));
-
-		$monologLoggerService = $builder->getDefinition($monologLoggerServiceName);
-		assert($monologLoggerService instanceof DI\Definitions\ServiceDefinition);
-
-		if ($configuration->logging->rotatingFile) {
-			$rotatingFileHandler = $builder->getDefinition($this->prefix('logger.handler.rotatingFile'));
-
-			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $rotatingFileHandler]);
-		}
-
-		if ($configuration->logging->stdOut) {
-			$stdOutHandler = $builder->getDefinition($this->prefix('logger.handler.stdOut'));
-
-			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $stdOutHandler]);
-		}
-
 		$sentryHandlerServiceName = $builder->getByType(Sentry\Monolog\Handler::class);
 
-		if ($sentryHandlerServiceName !== null) {
-			$sentryHandlerService = $builder->getDefinition($this->prefix('sentry.handler'));
-			assert($sentryHandlerService instanceof DI\Definitions\ServiceDefinition);
+		if (
+			$configuration->logging->rotatingFile !== null
+			|| $configuration->logging->stdOut
+			|| $sentryHandlerServiceName !== null
+		) {
+			$monologLoggerServiceName = $builder->getByType(Monolog\Logger::class);
+			assert(is_string($monologLoggerServiceName));
 
-			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService]);
+			$monologLoggerService = $builder->getDefinition($monologLoggerServiceName);
+			assert($monologLoggerService instanceof DI\Definitions\ServiceDefinition);
+
+			if ($configuration->logging->rotatingFile) {
+				$rotatingFileHandler = $builder->getDefinition($this->prefix('logger.handler.rotatingFile'));
+
+				$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $rotatingFileHandler]);
+			}
+
+			if ($configuration->logging->stdOut) {
+				$stdOutHandler = $builder->getDefinition($this->prefix('logger.handler.stdOut'));
+
+				$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $stdOutHandler]);
+			}
+
+			if ($sentryHandlerServiceName !== null) {
+				$sentryHandlerService = $builder->getDefinition($this->prefix('sentry.handler'));
+				assert($sentryHandlerService instanceof DI\Definitions\ServiceDefinition);
+
+				$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService]);
+			}
 		}
 	}
 
