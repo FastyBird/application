@@ -13,7 +13,7 @@
  * @date           25.10.22
  */
 
-namespace FastyBird\Bootstrap\Boot;
+namespace FastyBird\Library\Bootstrap\Boot;
 
 use Composer\Autoload\ClassLoader;
 use Nette\Bootstrap;

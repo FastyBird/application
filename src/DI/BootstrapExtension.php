@@ -13,15 +13,17 @@
  * @date           08.03.20
  */
 
-namespace FastyBird\Bootstrap\DI;
+namespace FastyBird\Library\Bootstrap\DI;
 
-use FastyBird\Bootstrap\Helpers;
+use FastyBird\Library\Bootstrap\Helpers;
+use FastyBird\Library\Bootstrap\Subscribers;
 use Monolog;
 use Nette;
 use Nette\DI;
 use Nette\Schema;
 use Sentry;
 use stdClass;
+use Symfony\Bridge\Monolog as SymfonyMonolog;
 use function assert;
 use function class_exists;
 use function getenv;
@@ -39,9 +41,11 @@ use const DIRECTORY_SEPARATOR;
 class BootstrapExtension extends DI\CompilerExtension
 {
 
+	public const NAME = 'fbBootstrapLibrary';
+
 	public static function register(
 		Nette\Configurator $config,
-		string $extensionName = 'fbBootstrap',
+		string $extensionName = self::NAME,
 	): void
 	{
 		$config->onCompile[] = static function (
@@ -60,6 +64,12 @@ class BootstrapExtension extends DI\CompilerExtension
 					'level' => Schema\Expect::int(Monolog\Logger::ERROR),
 					'rotatingFile' => Schema\Expect::string(null)->nullable(),
 					'stdOut' => Schema\Expect::bool(false),
+					'console' => Schema\Expect::structure(
+						[
+							'enabled' => Schema\Expect::bool(false),
+							'level' => Schema\Expect::int(Monolog\Logger::INFO),
+						],
+					),
 				],
 			),
 			'sentry' => Schema\Expect::structure(
@@ -96,6 +106,17 @@ class BootstrapExtension extends DI\CompilerExtension
 				->setArguments([
 					'stream' => 'php://stdout',
 					'level' => $configuration->logging->level,
+				]);
+		}
+
+		if ($configuration->logging->console->enabled) {
+			$builder->addDefinition($this->prefix('logger.handler.console'), new DI\Definitions\ServiceDefinition())
+				->setType(SymfonyMonolog\Handler\ConsoleHandler::class);
+
+			$builder->addDefinition($this->prefix('subscribers.console'), new DI\Definitions\ServiceDefinition())
+				->setType(Subscribers\Console::class)
+				->setArguments([
+					'level' => $configuration->logging->console->level,
 				]);
 		}
 
@@ -147,6 +168,9 @@ class BootstrapExtension extends DI\CompilerExtension
 		}
 	}
 
+	/**
+	 * @throws Nette\DI\MissingServiceException
+	 */
 	public function beforeCompile(): void
 	{
 		parent::beforeCompile();
@@ -178,6 +202,12 @@ class BootstrapExtension extends DI\CompilerExtension
 				$stdOutHandler = $builder->getDefinition($this->prefix('logger.handler.stdOut'));
 
 				$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $stdOutHandler]);
+			}
+
+			if ($configuration->logging->console->enabled) {
+				$consoleHandler = $builder->getDefinition($this->prefix('logger.handler.console'));
+
+				$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $consoleHandler]);
 			}
 
 			if ($sentryHandlerServiceName !== null) {

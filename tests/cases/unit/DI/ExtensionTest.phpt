@@ -1,17 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Cases\Unit;
+namespace FastyBird\Library\Bootstrap\Tests\Cases\Unit\DI;
 
-use FastyBird\Bootstrap\Boot;
-use Ninjify\Nunjuck\TestCase\BaseTestCase;
-use Tester\Assert;
+use FastyBird\Library\Bootstrap\Boot;
+use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-/**
- * @testCase
- */
-final class ExtensionTest extends BaseTestCase
+final class ExtensionTest extends TestCase
 {
 
 	public function testCompilersServices(): void
@@ -20,10 +14,7 @@ final class ExtensionTest extends BaseTestCase
 
 		$configurator->createContainer();
 
-		Assert::true(true);
+		$this->expectNotToPerformAssertions();
 	}
 
 }
-
-$test_case = new ExtensionTest();
-$test_case->run();

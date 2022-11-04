@@ -13,7 +13,7 @@
  * @date           08.03.20
  */
 
-namespace FastyBird\Bootstrap\Exceptions;
+namespace FastyBird\Library\Bootstrap\Exceptions;
 
 use InvalidArgumentException as PHPInvalidArgumentException;
 
