@@ -1,23 +1,23 @@
 <?php declare(strict_types = 1);
 
 /**
- * InvalidState.php
+ * Runtime.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:Application!
+ * @package        FastyBird:DevicesModule!
  * @subpackage     Exceptions
  * @since          1.0.0
  *
- * @date           08.03.20
+ * @date           20.01.24
  */
 
 namespace FastyBird\Library\Application\Exceptions;
 
-use RuntimeException;
+use RuntimeException as PHPRuntimeException;
 
-class InvalidState extends RuntimeException implements Exception
+class Runtime extends PHPRuntimeException implements Exception
 {
 
 }

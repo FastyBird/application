@@ -1,23 +1,24 @@
 <?php declare(strict_types = 1);
 
 /**
- * BootstrapExtension.php
+ * ApplicationExtension.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:Bootstrap!
+ * @package        FastyBird:Application!
  * @subpackage     DI
  * @since          1.0.0
  *
  * @date           08.03.20
  */
 
-namespace FastyBird\Library\Bootstrap\DI;
+namespace FastyBird\Library\Application\DI;
 
-use FastyBird\Library\Bootstrap\Boot;
-use FastyBird\Library\Bootstrap\Helpers;
-use FastyBird\Library\Bootstrap\Subscribers;
+use FastyBird\Library\Application\Boot;
+use FastyBird\Library\Application\EventLoop\Wrapper;
+use FastyBird\Library\Application\Helpers;
+use FastyBird\Library\Application\Subscribers;
 use Monolog;
 use Nette;
 use Nette\DI;
@@ -33,17 +34,17 @@ use function is_string;
 use const DIRECTORY_SEPARATOR;
 
 /**
- * App bootstrap extension container
+ * App application extension container
  *
- * @package        FastyBird:Bootstrap!
+ * @package        FastyBird:Application!
  * @subpackage     DI
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class BootstrapExtension extends DI\CompilerExtension
+class ApplicationExtension extends DI\CompilerExtension
 {
 
-	public const NAME = 'fbBootstrapLibrary';
+	public const NAME = 'fbApplicationLibrary';
 
 	public static function register(
 		Boot\Configurator $config,
@@ -86,7 +87,7 @@ class BootstrapExtension extends DI\CompilerExtension
 			),
 			'sentry' => Schema\Expect::structure(
 				[
-					'dsn' => Schema\Expect::string(null)->nullable(),
+					'dsn' => Schema\Expect::string()->nullable(),
 					'level' => Schema\Expect::int(Monolog\Level::Warning),
 				],
 			),
@@ -99,7 +100,10 @@ class BootstrapExtension extends DI\CompilerExtension
 		$configuration = $this->getConfig();
 		assert($configuration instanceof stdClass);
 
-		// Logger handlers
+		/**
+		 * LOGGERS
+		 */
+
 		if ($configuration->logging->rotatingFile->enabled === true) {
 			$builder->addDefinition(
 				$this->prefix('logger.handler.rotatingFile'),
@@ -122,14 +126,37 @@ class BootstrapExtension extends DI\CompilerExtension
 				]);
 		}
 
+		$consoleHandler = null;
+
 		if ($configuration->logging->console->enabled) {
 			$consoleHandler = $builder->addDefinition(
 				$this->prefix('logger.handler.console'),
 				new DI\Definitions\ServiceDefinition(),
 			)
 				->setType(SymfonyMonolog\Handler\ConsoleHandler::class);
+		}
 
-			$builder->addDefinition($this->prefix('subscribers.console'), new DI\Definitions\ServiceDefinition())
+		/**
+		 * HELPERS
+		 */
+
+		$builder->addDefinition($this->prefix('helpers.eventLoop'), new DI\Definitions\ServiceDefinition())
+			->setType(Wrapper::class);
+
+		if (class_exists('\Doctrine\DBAL\Connection') && class_exists('\Doctrine\ORM\EntityManager')) {
+			$builder->addDefinition($this->prefix('helpers.database'), new DI\Definitions\ServiceDefinition())
+				->setType(Helpers\Database::class);
+		}
+
+		/**
+		 * SUBSCRIBERS
+		 */
+
+		if ($configuration->logging->console->enabled) {
+			$builder->addDefinition(
+				$this->prefix('subscribers.console'),
+				new DI\Definitions\ServiceDefinition(),
+			)
 				->setType(Subscribers\Console::class)
 				->setArguments([
 					'handler' => $consoleHandler,
@@ -137,16 +164,23 @@ class BootstrapExtension extends DI\CompilerExtension
 				]);
 		}
 
-		$builder->addDefinition($this->prefix('helpers.eventLoop'), new DI\Definitions\ServiceDefinition())
-			->setType(Helpers\LoopWrapper::class);
-
 		if (class_exists('\Doctrine\DBAL\Connection') && class_exists('\Doctrine\ORM\EntityManager')) {
-			$builder->addDefinition($this->prefix('helpers.database'), new DI\Definitions\ServiceDefinition())
-				->setType(Helpers\Database::class);
+			$builder->addDefinition(
+				$this->prefix('subscribers.entityDiscriminator'),
+				new DI\Definitions\ServiceDefinition(),
+			)
+				->setType(Subscribers\EntityDiscriminator::class);
 		}
 
+		/**
+		 * SENTRY ISSUES LOGGER
+		 */
+
 		if (interface_exists('\Sentry\ClientInterface')) {
-			$builder->addDefinition($this->prefix('helpers.sentry'), new DI\Definitions\ServiceDefinition())
+			$builder->addDefinition(
+				$this->prefix('helpers.sentry'),
+				new DI\Definitions\ServiceDefinition(),
+			)
 				->setType(Helpers\Sentry::class);
 		}
 
@@ -170,7 +204,6 @@ class BootstrapExtension extends DI\CompilerExtension
 			$sentryDSN = null;
 		}
 
-		// Sentry issues logger
 		if (is_string($sentryDSN) && $sentryDSN !== '') {
 			$builder->addDefinition($this->prefix('sentry.handler'), new DI\Definitions\ServiceDefinition())
 				->setType(Sentry\Monolog\Handler::class)
@@ -203,12 +236,13 @@ class BootstrapExtension extends DI\CompilerExtension
 		$configuration = $this->getConfig();
 		assert($configuration instanceof stdClass);
 
-		$sentryHandlerServiceName = $builder->getByType(Sentry\Monolog\Handler::class);
+		/**
+		 * LOGGERS
+		 */
 
 		if (
 			$configuration->logging->rotatingFile->enabled === true
 			|| $configuration->logging->stdOut->enabled === true
-			|| $sentryHandlerServiceName !== null
 		) {
 			$monologLoggerServiceName = $builder->getByType(Monolog\Logger::class);
 			assert(is_string($monologLoggerServiceName));
@@ -227,13 +261,44 @@ class BootstrapExtension extends DI\CompilerExtension
 
 				$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $stdOutHandler]);
 			}
+		}
 
-			if ($sentryHandlerServiceName !== null) {
-				$sentryHandlerService = $builder->getDefinition($this->prefix('sentry.handler'));
-				assert($sentryHandlerService instanceof DI\Definitions\ServiceDefinition);
+		/**
+		 * SENTRY
+		 */
 
-				$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService]);
-			}
+		$sentryHandlerServiceName = $builder->getByType(Sentry\Monolog\Handler::class);
+
+		if ($sentryHandlerServiceName !== null) {
+			$monologLoggerServiceName = $builder->getByType(Monolog\Logger::class);
+			assert(is_string($monologLoggerServiceName));
+
+			$monologLoggerService = $builder->getDefinition($monologLoggerServiceName);
+			assert($monologLoggerService instanceof DI\Definitions\ServiceDefinition);
+
+			$sentryHandlerService = $builder->getDefinition($this->prefix('sentry.handler'));
+			assert($sentryHandlerService instanceof DI\Definitions\ServiceDefinition);
+
+			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService]);
+		}
+
+		/**
+		 * DOCTRINE
+		 */
+
+		if (
+			class_exists('\Doctrine\DBAL\Connection')
+			&& class_exists('\Doctrine\ORM\EntityManager')
+			&& $builder->getByType('\Doctrine\ORM\EntityManagerInterface') !== null
+		) {
+			$emService = $builder->getDefinitionByType('\Doctrine\ORM\EntityManagerInterface');
+			assert($emService instanceof DI\Definitions\ServiceDefinition);
+
+			$emService
+				->addSetup('?->getEventManager()->addEventSubscriber(?)', [
+					'@self',
+					$builder->getDefinitionByType(Subscribers\EntityDiscriminator::class),
+				]);
 		}
 	}
 

@@ -6,14 +6,14 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:Bootstrap!
+ * @package        FastyBird:Application!
  * @subpackage     Subscribers
  * @since          1.0.0
  *
  * @date           06.10.22
  */
 
-namespace FastyBird\Library\Bootstrap\Subscribers;
+namespace FastyBird\Library\Application\Subscribers;
 
 use Monolog;
 use Psr\Log\LogLevel;
@@ -24,11 +24,12 @@ use Symfony\Component\EventDispatcher;
 /**
  * Console subscriber
  *
- * @package         FastyBird:Bootstrap!
- * @subpackage      Subscribers
- * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ * @package        FastyBird:Application!
+ * @subpackage     Subscribers
+ *
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class Console implements EventDispatcher\EventSubscriberInterface
+readonly class Console implements EventDispatcher\EventSubscriberInterface
 {
 
 	/**
@@ -37,9 +38,9 @@ class Console implements EventDispatcher\EventSubscriberInterface
 	 * @phpstan-param value-of<Monolog\Level::VALUES>|value-of<Monolog\Level::NAMES>|Monolog\Level|LogLevel::* $level
 	 */
 	public function __construct(
-		private readonly Monolog\Logger $logger,
-		private readonly SymfonyMonolog\Handler\ConsoleHandler $handler,
-		private readonly int|string|Monolog\Level $level,
+		private Monolog\Logger $logger,
+		private SymfonyMonolog\Handler\ConsoleHandler $handler,
+		private int|string|Monolog\Level $level,
 	)
 	{
 	}

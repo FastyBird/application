@@ -1,20 +1,22 @@
 <?php declare(strict_types = 1);
 
 /**
- * LoopWrapper.php
+ * Wrapper.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:Bootstrap!
+ * @package        FastyBird:Application!
  * @subpackage     Helpers
  * @since          1.0.0
  *
  * @date           02.01.24
  */
 
-namespace FastyBird\Library\Bootstrap\Helpers;
+namespace FastyBird\Library\Application\EventLoop;
 
+use FastyBird\Library\Application\Events;
+use Psr\EventDispatcher;
 use React\EventLoop as ReactEventLoop;
 use function error_get_last;
 use function register_shutdown_function;
@@ -23,21 +25,29 @@ use const E_CORE_ERROR;
 use const E_ERROR;
 use const E_RECOVERABLE_ERROR;
 use const E_USER_ERROR;
+use const SIGINT;
+use const SIGTERM;
 
 /**
  * React event loop wrapper
  *
- * @package         FastyBird:Bootstrap!
- * @subpackage      Helpers
+ * @package        FastyBird:Application!
+ * @subpackage     Helpers
  *
- * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class LoopWrapper implements ReactEventLoop\LoopInterface
+class Wrapper implements ReactEventLoop\LoopInterface
 {
 
 	private ReactEventLoop\LoopInterface|null $instance = null;
 
 	private bool $stopped = false;
+
+	public function __construct(
+		private readonly EventDispatcher\EventDispatcherInterface|null $dispatcher = null,
+	)
+	{
+	}
 
 	public function addTimer($interval, $callback)
 	{
@@ -91,12 +101,24 @@ class LoopWrapper implements ReactEventLoop\LoopInterface
 
 	public function run(): void
 	{
+		$this->dispatcher?->dispatch(new Events\EventLoopStarted());
+
+		$this->addSignal(SIGTERM, function (): void {
+			$this->dispatcher?->dispatch(new Events\EventLoopStopping());
+		});
+
+		$this->addSignal(SIGINT, function (): void {
+			$this->dispatcher?->dispatch(new Events\EventLoopStopping());
+		});
+
 		$this->get()->run();
 	}
 
 	public function stop(): void
 	{
 		$this->get()->stop();
+
+		$this->dispatcher?->dispatch(new Events\EventLoopStopped());
 	}
 
 	private function get(): ReactEventLoop\LoopInterface

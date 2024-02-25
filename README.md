@@ -2,40 +2,45 @@
 	<img src="https://github.com/fastybird/.github/blob/main/assets/repo_title.png?raw=true" alt="FastyBird"/>
 </p>
 
-# FastyBird application bootstrap library
+# FastyBird application library
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/FastyBird/bootstrap-library/ci.yaml?style=flat-square)](https://github.com/FastyBird/bootstrap-library/actions)
-[![Licence](https://img.shields.io/github/license/FastyBird/bootstrap-library?style=flat-square)](https://github.com/FastyBird/bootstrap-library/blob/main/LICENSE.md)
-[![Code coverage](https://img.shields.io/coverallsCoverage/github/FastyBird/bootstrap-library?style=flat-square)](https://coveralls.io/r/FastyBird/bootstrap-library)
-[![Mutation testing](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FFastyBird%2Fbootstrap-library%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/FastyBird/bootstrap-library/main)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/FastyBird/application-library/ci.yaml?style=flat-square)](https://github.com/FastyBird/application-library/actions)
+[![Licence](https://img.shields.io/github/license/FastyBird/application-library?style=flat-square)](https://github.com/FastyBird/application-library/blob/main/LICENSE.md)
+[![Code coverage](https://img.shields.io/coverallsCoverage/github/FastyBird/application-library?style=flat-square)](https://coveralls.io/r/FastyBird/application-library)
+[![Mutation testing](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FFastyBird%2Fapplication-library%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/FastyBird/application-library/main)
 
-![PHP](https://badgen.net/packagist/php/FastyBird/bootstrap-library?cache=300&style=flat-square)
-[![Latest stable](https://badgen.net/packagist/v/FastyBird/bootstrap-library/latest?cache=300&style=flat-square)](https://packagist.org/packages/FastyBird/bootstrap-library)
-[![Downloads total](https://badgen.net/packagist/dt/FastyBird/bootstrap-library?cache=300&style=flat-square)](https://packagist.org/packages/FastyBird/bootstrap-library)
+![PHP](https://badgen.net/packagist/php/FastyBird/application-library?cache=300&style=flat-square)
+[![Latest stable](https://badgen.net/packagist/v/FastyBird/application-library/latest?cache=300&style=flat-square)](https://packagist.org/packages/FastyBird/application-library)
+[![Downloads total](https://badgen.net/packagist/dt/FastyBird/application-library?cache=300&style=flat-square)](https://packagist.org/packages/FastyBird/application-library)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
 
 ***
 
-## What is FastyBird application bootstrap library?
+## What is FastyBird application library?
 
-This is a [Nette framework](https://nette.org) extension for application bootstrapping.
+This extension is an integral part of the [FastyBird](https://www.fastybird.com) application, offering essential core services within
+the [Nette framework](https://nette.org). It provides a robust foundation that ensures seamless integration and optimal functionality
+for various components within the application architecture.
+
+Application library is a distributed extension that is developed in [PHP](https://www.php.net), built on the [Nette](https://nette.org) and [Symfony](https://symfony.com) frameworks,
+and is licensed under [Apache2](http://www.apache.org/licenses/LICENSE-2.0).
 
 ## Requirements
 
-Application bootstrap library is tested against PHP 8.1.
+Application library is tested against PHP 8.2.
 
 ## Installation
 
-The best way to install **fastybird/bootstrap-library** is using [Composer](http://getcomposer.org/):
+This extension is part of the [FastyBird](https://www.fastybird.com) [IoT](https://en.wikipedia.org/wiki/Internet_of_things) ecosystem and is installed by default.
+In case you want to create you own distribution of [FastyBird](https://www.fastybird.com) [IoT](https://en.wikipedia.org/wiki/Internet_of_things) ecosystem you could install this extension with  [Composer](http://getcomposer.org/):
 
 ```sh
-composer require fastybird/bootstrap-library
+composer require fastybird/application-library
 ```
 
 ## Documentation
 
-Learn how to bootstrap FastyBird application
-in [documentation](https://github.com/FastyBird/bootstrap-library/blob/main/docs/index.md).
+:book: Learn how to create FastyBird application in [documentation](https://github.com/FastyBird/application-library/wiki).
 
 # FastyBird
 
@@ -47,17 +52,17 @@ FastyBird is an Open Source IOT solution built from decoupled components with po
 
 ## Documentation
 
-Documentation is available on [docs.fastybird.com](https://docs.fastybird.com).
+:book: Documentation is available on [docs.fastybird.com](https://docs.fastybird.com).
 
 ## Contributing
 
-The sources of this package are contained in the [FastyBird monorepo](https://github.com/FastyBird/fastybird). We welcome contributions for this package on [FastyBird/fastybird](https://github.com/FastyBird/).
+The sources of this package are contained in the [FastyBird monorepo](https://github.com/FastyBird/fastybird). We welcome
+contributions for this package on [FastyBird/fastybird](https://github.com/FastyBird/).
 
 ## Feedback
 
-Use the [issue tracker](https://github.com/FastyBird/fastybird/issues) for bugs
-or [mail](mailto:code@fastybird.com) or [Tweet](https://twitter.com/fastybird) us for any idea that can improve the
-project.
+Use the [issue tracker](https://github.com/FastyBird/fastybird/issues) for bugs reporting or send an [mail](mailto:code@fastybird.com)
+to us or you could reach us on [X newtwork](https://x.com/fastybird) for any idea that can improve the project.
 
 Thank you for testing, reporting and contributing.
 
@@ -83,4 +88,4 @@ For release info check [release page](https://github.com/FastyBird/fastybird/rel
 
 ***
 Homepage [https://www.fastybird.com](https://www.fastybird.com) and
-repository [https://github.com/FastyBird/bootstrap](https://github.com/FastyBird/bootstrap).
+repository [https://github.com/FastyBird/application](https://github.com/FastyBird/application).

@@ -4,7 +4,7 @@
 # @license        More in LICENSE.md
 # @copyright      https://www.fastybird.com
 # @author         Adam Kadlec <adam.kadlec@fastybird.com>
-# @package        FastyBird:Bootstrap!
+# @package        FastyBird:Application!
 # @subpackage     config
 # @since          1.0.0
 #
@@ -19,14 +19,15 @@ extensions:
     contributteMonolog      : Contributte\Monolog\DI\MonologExtension
     contributteCacheFactory : Contributte\Cache\DI\CacheFactoryExtension
     orisaiObjectMapper      : OriNette\ObjectMapper\DI\ObjectMapperExtension
-    fbBootstrapLibrary      : FastyBird\Library\Bootstrap\DI\BootstrapExtension
+    fbApplicationLibrary    : FastyBird\Library\Application\DI\ApplicationExtension
 
 ##################################
 # Nette extensions configuration #
 ##################################
 
 services:
-    cache.storage: Contributte\Cache\Storages\MemoryAdapterStorage(FastyBird\Library\Bootstrap\Caching\FileStorage(%tempDir%/cache, Nette\Caching\Storages\SQLiteJournal(%tempDir%/cache/journal.s3db)))
+    # cache.storage: FastyBird\Library\Application\Caching\MemoryAdapterStorage(FastyBird\Library\Application\Caching\FileStorage(%tempDir%/cache, Nette\Caching\Storages\SQLiteJournal(%tempDir%/cache/journal.s3db)))
+    cache.storage: FastyBird\Library\Application\Caching\MemoryStorage
 
 # Symfony console support extension
 ###################################
@@ -58,12 +59,11 @@ contributteMonolog:
 orisaiObjectMapper:
     debug: %debugMode%
     rules:
-        - FastyBird\Library\Bootstrap\ObjectMapper\Rules\ConsistenceEnumRule()
-        - FastyBird\Library\Bootstrap\ObjectMapper\Rules\UuidRule()
+        - FastyBird\Library\Application\ObjectMapper\Rules\UuidRule()
 
-# Application bootstrap extension
-#################################
-fbBootstrapLibrary:
+# Core application extension
+############################
+fbApplicationLibrary:
     logging:
         rotatingFile:
             enabled: %logger.rotatingFile.enabled%

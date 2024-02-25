@@ -6,14 +6,14 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:Bootstrap!
+ * @package        FastyBird:Application!
  * @subpackage     Helpers
  * @since          1.0.0
  *
  * @date           07.04.23
  */
 
-namespace FastyBird\Library\Bootstrap\Helpers;
+namespace FastyBird\Library\Application\Helpers;
 
 use Nette;
 use Sentry\ClientInterface;
@@ -21,10 +21,10 @@ use Sentry\ClientInterface;
 /**
  * Sentry connection helpers
  *
- * @package         FastyBird:Bootstrap!
- * @subpackage      Helpers
+ * @package        FastyBird:Application!
+ * @subpackage     Helpers
  *
- * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
 class Sentry
 {

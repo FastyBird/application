@@ -1,21 +1,21 @@
 <?php declare(strict_types = 1);
 
 /**
- * Bootstrap.php
+ * Application.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:Bootstrap!
+ * @package        FastyBird:Application!
  * @subpackage     Boot
  * @since          1.0.0
  *
  * @date           08.03.20
  */
 
-namespace FastyBird\Library\Bootstrap\Boot;
+namespace FastyBird\Library\Application\Boot;
 
-use FastyBird\Library\Bootstrap\Exceptions;
+use FastyBird\Library\Application\Exceptions;
 use Tester;
 use function array_key_exists;
 use function array_merge;
@@ -44,9 +44,9 @@ use function substr;
 use const DIRECTORY_SEPARATOR as DS;
 
 /**
- * Service bootstrap configurator
+ * Service application configurator
  *
- * @package        FastyBird:Bootstrap!
+ * @package        FastyBird:Application!
  * @subpackage     Boot
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>

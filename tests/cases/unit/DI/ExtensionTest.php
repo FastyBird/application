@@ -1,10 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace FastyBird\Library\Bootstrap\Tests\Cases\Unit\DI;
+namespace FastyBird\Library\Application\Tests\Cases\Unit\DI;
 
-use FastyBird\Library\Bootstrap\Boot;
-use FastyBird\Library\Bootstrap\Exceptions;
-use FastyBird\Library\Bootstrap\Helpers;
+use FastyBird\Library\Application\Boot;
+use FastyBird\Library\Application\Exceptions;
+use FastyBird\Library\Application\Helpers;
 use Monolog;
 use Nette;
 use PHPUnit\Framework\TestCase;

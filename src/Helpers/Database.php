@@ -6,32 +6,33 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:Bootstrap!
+ * @package        FastyBird:Application!
  * @subpackage     Helpers
  * @since          1.0.0
  *
  * @date           15.04.20
  */
 
-namespace FastyBird\Library\Bootstrap\Helpers;
+namespace FastyBird\Library\Application\Helpers;
 
 use Doctrine\DBAL;
 use Doctrine\ORM;
 use Doctrine\Persistence;
-use FastyBird\Library\Bootstrap\Exceptions;
+use FastyBird\Library\Application\Exceptions;
 use FastyBird\Library\Metadata\Types as MetadataTypes;
 use Nette;
 use Psr\Log;
 use Throwable;
 use function gc_collect_cycles;
+use function is_int;
 
 /**
  * Database connection helpers
  *
- * @package         FastyBird:Bootstrap!
- * @subpackage      Helpers
+ * @package        FastyBird:Application!
+ * @subpackage     Helpers
  *
- * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
 class Database
 {
@@ -43,6 +44,140 @@ class Database
 		private readonly Log\LoggerInterface $logger = new Log\NullLogger(),
 	)
 	{
+	}
+
+	/**
+	 * @template T
+	 *
+	 * @param callable(): T $callback
+	 *
+	 * @return T
+	 *
+	 * @throws Exceptions\InvalidState
+	 */
+	public function query(callable $callback)
+	{
+		try {
+			$this->pingAndReconnect();
+
+			return $callback();
+		} catch (Throwable $ex) {
+			throw new Exceptions\InvalidState(
+				'An error occurred: ' . $ex->getMessage(),
+				is_int($ex->getCode()) ? $ex->getCode() : 0,
+				$ex,
+			);
+		}
+	}
+
+	/**
+	 * @param callable(): T $callback
+	 *
+	 * @return T
+	 *
+	 * @throws DBAL\Exception
+	 * @throws Exceptions\InvalidState
+	 * @throws Exceptions\Runtime
+	 *
+	 * @template T
+	 */
+	public function transaction(callable $callback)
+	{
+		$connection = $this->getConnection();
+
+		if ($connection === null) {
+			throw new Exceptions\Runtime('Entity manager could not be loaded');
+		}
+
+		try {
+			$this->pingAndReconnect();
+
+			// Start transaction connection to the database
+			$connection->beginTransaction();
+
+			$result = $callback();
+
+			if ($connection->isRollbackOnly()) {
+				$connection->rollBack();
+
+				throw new Exceptions\InvalidState('Transaction was roll backed');
+			} else {
+				// Commit all changes into database
+				$connection->commit();
+			}
+
+			return $result;
+		} catch (Throwable $ex) {
+			// Revert all changes when error occur
+			if ($connection->isTransactionActive()) {
+				$connection->rollBack();
+			}
+
+			throw new Exceptions\InvalidState(
+				'An error occurred: ' . $ex->getMessage(),
+				is_int($ex->getCode()) ? $ex->getCode() : 0,
+				$ex,
+			);
+		}
+	}
+
+	/**
+	 * @throws Exceptions\InvalidState
+	 * @throws Exceptions\Runtime
+	 */
+	public function beginTransaction(): void
+	{
+		$connection = $this->getConnection();
+
+		if ($connection === null) {
+			throw new Exceptions\Runtime('Entity manager could not be loaded');
+		}
+
+		try {
+			$this->pingAndReconnect();
+
+			$connection->beginTransaction();
+		} catch (Throwable $ex) {
+			throw new Exceptions\InvalidState(
+				'An error occurred: ' . $ex->getMessage(),
+				is_int($ex->getCode()) ? $ex->getCode() : 0,
+				$ex,
+			);
+		}
+	}
+
+	/**
+	 * @throws DBAL\Exception
+	 * @throws Exceptions\InvalidState
+	 * @throws Exceptions\Runtime
+	 */
+	public function commitTransaction(): void
+	{
+		$connection = $this->getConnection();
+
+		if ($connection === null) {
+			throw new Exceptions\Runtime('Entity manager could not be loaded');
+		}
+
+		try {
+			if ($connection->isRollbackOnly()) {
+				$connection->rollBack();
+			} else {
+				// Commit all changes into database
+				$connection->commit();
+			}
+		} catch (Throwable $ex) {
+			// Revert all changes when error occur
+			if ($connection->isTransactionActive()) {
+				$connection->rollBack();
+			}
+
+			throw new Exceptions\InvalidState(
+				'An error occurred: ' . $ex->getMessage(),
+				is_int($ex->getCode()) ? $ex->getCode() : 0,
+				$ex,
+			);
+		}
 	}
 
 	/**
@@ -107,33 +242,42 @@ class Database
 				}
 			} catch (Throwable $ex) {
 				// Log caught exception
-				$this->logger->error('An unhandled error occurred during flushing entity manager', [
-					'source' => MetadataTypes\ModuleSource::SOURCE_NOT_SPECIFIED,
-					'type' => 'helper',
-					'exception' => Logger::buildException($ex),
-				]);
+				$this->logger->error(
+					'An unhandled error occurred during flushing entity manager',
+					[
+						'source' => MetadataTypes\Sources\Module::NOT_SPECIFIED,
+						'type' => 'helper',
+						'exception' => Logger::buildException($ex),
+					],
+				);
 			}
 
 			try {
 				$manager->getConnection()->close();
 			} catch (Throwable $ex) {
 				// Log caught exception
-				$this->logger->error('An unhandled error occurred during closing entity manager', [
-					'source' => MetadataTypes\ModuleSource::SOURCE_NOT_SPECIFIED,
-					'type' => 'helper',
-					'exception' => Logger::buildException($ex),
-				]);
+				$this->logger->error(
+					'An unhandled error occurred during closing entity manager',
+					[
+						'source' => MetadataTypes\Sources\Module::NOT_SPECIFIED,
+						'type' => 'helper',
+						'exception' => Logger::buildException($ex),
+					],
+				);
 			}
 
 			try {
 				$manager->clear();
 			} catch (Throwable $ex) {
 				// Log caught exception
-				$this->logger->error('An unhandled error occurred during clearing entity manager', [
-					'source' => MetadataTypes\ModuleSource::SOURCE_NOT_SPECIFIED,
-					'type' => 'helper',
-					'exception' => Logger::buildException($ex),
-				]);
+				$this->logger->error(
+					'An unhandled error occurred during clearing entity manager',
+					[
+						'source' => MetadataTypes\Sources\Module::NOT_SPECIFIED,
+						'type' => 'helper',
+						'exception' => Logger::buildException($ex),
+					],
+				);
 			}
 
 			if (!$manager->isOpen()) {
@@ -159,6 +303,31 @@ class Database
 		}
 
 		return null;
+	}
+
+	/**
+	 * @throws Exceptions\Runtime
+	 */
+	private function pingAndReconnect(): void
+	{
+		try {
+			// Check if ping to DB is possible...
+			if (!$this->ping()) {
+				// ...if not, try to reconnect
+				$this->reconnect();
+
+				// ...and ping again
+				if (!$this->ping()) {
+					throw new Exceptions\Runtime('Connection to database could not be re-established');
+				}
+			}
+		} catch (Throwable $ex) {
+			throw new Exceptions\Runtime(
+				'Connection to database could not be re-established',
+				$ex->getCode(),
+				$ex,
+			);
+		}
 	}
 
 	/**

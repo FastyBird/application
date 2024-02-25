@@ -1,18 +1,31 @@
-# Quick start
+<p align="center">
+	<img src="https://github.com/fastybird/.github/blob/main/assets/repo_title.png?raw=true" alt="FastyBird"/>
+</p>
 
-The purpose of this extension is to prepare basic bootstrap for [FastyBird](https://www.fastybird.com) application with some default useful extensions.
+> [!IMPORTANT]
+This documentation is meant to be used by developers or users which has basic programming skills. If you are regular user
+please use FastyBird IoT documentation which is available on [docs.fastybird.com](https://docs.fastybird.com).
 
-***
+This extension plays a vital role in the [FastyBird](https://www.fastybird.com) application by orchestrating the establishment of essential core services.
+In addition to its primary function, it incorporates default extensions that contribute to the overall enhancement of the application's functionality,
+ensuring a robust and versatile framework for various tasks and operations.
 
-## Installation
+# About Library
 
-The best way to install **fastybird/bootstrap-library** is using [Composer](http://getcomposer.org/):
+This library has some services divided into namespaces. All services are preconfigured and imported into application
+container automatically.
 
-```sh
-composer require fastybird/bootstrap-library
+```
+\FastyBird\Library\Application
+  \Boot - Application bootstrap related services
+  \Caching - Cache related services
+  \Helpers - Useful helpers for working with database, logger etc.
+  \ObjectMapper - Object mapper custom rules
 ```
 
-## Configure bootstrap
+All services, helpers, etc. are written to be self-descriptive :wink:.
+
+## Using Library
 
 This extension is configured via **env** variables or via Neon **parameters** or their combination.
 
@@ -30,10 +43,12 @@ FB_LOGS_DIR - is dir for application logs or exceptions. Default value is FB_APP
 FB_CONFIG_DIR - is dir where you sould place your custom configuration. Default value is FB_APP_DIR . '/config' 
 ```
 
-From this env variables are created PHP constants sou you could use them in app.
+> [!TIP]
+You don't need to configure this environment variables. It is totally ok to use defined values. Folders will then be defined inside project root
 
-Values of **FB_APP_DIR**, **FB_TEMP_DIR** and **FB_LOGS_DIR** are also injected into nenon configuration parser, so
-could be used to configure services
+PHP constants are generated from these environment variables, allowing their convenient use throughout the application. Moreover, the values associated
+with FB_APP_DIR, FB_TEMP_DIR, and FB_LOGS_DIR are seamlessly integrated into the nenon configuration parser, facilitating their utilization in the
+configuration of various services.
 
 ```neon
 services: 
@@ -51,7 +66,7 @@ services:
 FastyBird application could be configured via `parameters` section in configuration neon file, but in case you don't want to
 store you sensitive data in file you could use configuration via env variables.
 
-Bootstrap will search for all env variables prefixed with `FB_APP_PARAMETER_` and create parameters array from them.
+Application will search for all env variables prefixed with `FB_APP_PARAMETER_` and create parameters array from them.
 Also structuring parameters is supported, just use delimiter `_`:
 
 ```nenon
@@ -70,7 +85,7 @@ $_ENV[FB_APP_PARAMETER_DATABASE_PASSWORD] = 'secretPass';
 
 Application configuration is done via neon files and this files have to be places into **FB_CONFIG_DIR**.
 
-Bootstrap will automatically load configuration files, all what you have to do is follow naming convention for neon
+Application will automatically load configuration files, all what you have to do is follow naming convention for neon
 files:
 
 ```
@@ -84,10 +99,10 @@ local.neon - file for additional configuration or user specific
 **common.neon** and **defaults.neon** should be versioned in you application repository, **local.neon** is meant to be
 custom local file not be stored in repository.
 
-## Create application container
+## Create Application Container
 
 Now when you have application configured you could move to next step, creating application entrypoint which will
-loads DI and fire `Nette\Application\Application::run`
+loads DI and fire `Nette\Application\Bootstrap::run`
 
 You can copy & paste it to your project, for example to `<app_root>/www/index.php`.
 
@@ -96,20 +111,20 @@ You can copy & paste it to your project, for example to `<app_root>/www/index.ph
 
 require __DIR__ . '/../vendor/autoload.php';
 
-exit(FastyBird\Library\Bootstrap\Boot\Bootstrap::boot()
+exit(FastyBird\Library\Application\Boot\Bootstrap::boot()
     ->createContainer()
     ->getByType(Nette\Application\Application::class)
     ->run());
 ```
 
-When a call `FastyBird\Library\Bootstrap\Boot\Bootstrap::boot()` is made, bootstrap will try to configure application and
+When a call `FastyBird\Library\Application\Boot\Bootstrap::boot()` is made, application will try to configure application and
 prepare everything for building container.
 
-## Default extensions
+## Default Extensions
 
 This extension has preconfigured some useful extensions.
 
-### Console support
+### Console Support
 
 Is implemented via [contribute/console](https://github.com/contributte/console) package. Console entrypoint could be
 found in composer `bin` folder and to run command just run:
@@ -118,7 +133,7 @@ found in composer `bin` folder and to run command just run:
 vendor/bin/fb_console your:command
 ```
 
-### Application logger
+### Application Logger
 
 Is implemented via [contribute/monolog](https://github.com/contributte/monolog) package. And is configured to log all
 actions with severity errors and higher.
@@ -140,7 +155,7 @@ parameters:
         level: 400 # Levels: DEBUG = 100, INFO = 200, NOTICE = 250, WARNING = 300, ERROR = 400, CRITICAL = 500, ALERT = 550, EMERGENCY = 600
 ```
 
-### Sentry bug tracking
+### Sentry Bug Tracking
 
 If you would like to track bugs in [Sentry](https://sentry.io/), all what you have to do, is to configure you Sentry
 DSN
@@ -150,7 +165,3 @@ parameters:
     sentry:
         dsn: yourSecretSentryDSNstring
 ```
-
-***
-Homepage [https://www.fastybird.com](https://www.fastybird.com) and
-repository [https://github.com/FastyBird/bootstrap](https://github.com/FastyBird/bootstrap).
