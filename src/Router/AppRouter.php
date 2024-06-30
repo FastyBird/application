@@ -1,31 +1,31 @@
 <?php declare(strict_types = 1);
 
 /**
- * EventLoopStopping.php
+ * AppRouter.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:ApplicationLibrary!
- * @subpackage     Events
+ * @subpackage     Router
  * @since          1.0.0
  *
- * @date           20.01.24
+ * @date           23.22.24
  */
 
-namespace FastyBird\Library\Application\Events;
+namespace FastyBird\Library\Application\Router;
 
-use Symfony\Contracts\EventDispatcher;
+use Nette\Application;
 
 /**
- * Event loop is going to be stopped event
+ * Application router
  *
- * @package        FastyBird:ApplicationLibrary!
- * @subpackage     Events
+ * @package        FastyBird:Application!
+ * @subpackage     Router
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class EventLoopStopping extends EventDispatcher\Event
+final class AppRouter extends Application\Routers\RouteList
 {
 
 }
