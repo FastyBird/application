@@ -6,14 +6,14 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Caching
  * @since          1.0.0
  *
  * @date           23.02.24
  */
 
-namespace FastyBird\Library\Application\Caching;
+namespace FastyBird\Core\Application\Caching;
 
 use Nette;
 use Nette\Caching;

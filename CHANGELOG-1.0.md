@@ -4,4 +4,4 @@
 
 #### TL;DR
 
-- Just put it in stable version
+- Migrate code from Python implementation into PHP.

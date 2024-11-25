@@ -6,21 +6,21 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Events
  * @since          1.0.0
  *
  * @date           19.01.24
  */
 
-namespace FastyBird\Library\Application\Events;
+namespace FastyBird\Core\Application\Events;
 
 use Symfony\Contracts\EventDispatcher;
 
 /**
  * Event loop was started event
  *
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Events
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>

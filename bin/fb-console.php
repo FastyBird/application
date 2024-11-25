@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-use FastyBird\Library\Application\Boot;
+use FastyBird\Core\Application\Boot;
 use Symfony\Component\Console;
 use const DIRECTORY_SEPARATOR as DS;
 

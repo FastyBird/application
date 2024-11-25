@@ -16,7 +16,7 @@ This library has some services divided into namespaces. All services are preconf
 container automatically.
 
 ```
-\FastyBird\Library\Application
+\FastyBird\Core\Application
   \Boot - Application bootstrap related services
   \Caching - Cache related services
   \Helpers - Useful helpers for working with database, logger etc.
@@ -111,13 +111,13 @@ You can copy & paste it to your project, for example to `<app_root>/www/index.ph
 
 require __DIR__ . '/../vendor/autoload.php';
 
-exit(FastyBird\Library\Application\Boot\Bootstrap::boot()
+exit(\FastyBird\Core\Application\Boot\Bootstrap::boot()
     ->createContainer()
     ->getByType(Nette\Application\Application::class)
     ->run());
 ```
 
-When a call `FastyBird\Library\Application\Boot\Bootstrap::boot()` is made, application will try to configure application and
+When a call `FastyBird\Core\Application\Boot\Bootstrap::boot()` is made, application will try to configure application and
 prepare everything for building container.
 
 ## Default Extensions
@@ -155,13 +155,3 @@ parameters:
         level: 400 # Levels: DEBUG = 100, INFO = 200, NOTICE = 250, WARNING = 300, ERROR = 400, CRITICAL = 500, ALERT = 550, EMERGENCY = 600
 ```
 
-### Sentry Bug Tracking
-
-If you would like to track bugs in [Sentry](https://sentry.io/), all what you have to do, is to configure you Sentry
-DSN
-
-```neon
-parameters:
-    sentry:
-        dsn: yourSecretSentryDSNstring
-```

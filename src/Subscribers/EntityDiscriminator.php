@@ -6,19 +6,19 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Subscribers
  * @since          1.0.0
  *
  * @date           06.02.24
  */
 
-namespace FastyBird\Library\Application\Subscribers;
+namespace FastyBird\Core\Application\Subscribers;
 
 use Doctrine\Common;
 use Doctrine\ORM;
-use FastyBird\Library\Application\Entities\Mapping\DiscriminatorEntry;
-use FastyBird\Library\Application\Exceptions;
+use FastyBird\Core\Application\Entities;
+use FastyBird\Core\Application\Exceptions;
 use ReflectionClass;
 use function array_keys;
 use function end;
@@ -29,7 +29,7 @@ use function str_contains;
 use function strtolower;
 
 /**
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Subscribers
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
@@ -145,7 +145,7 @@ class EntityDiscriminator implements Common\EventSubscriber
 			return null;
 		}
 
-		$attributes = $rc->getAttributes(DiscriminatorEntry::class);
+		$attributes = $rc->getAttributes(Entities\Mapping\DiscriminatorEntry::class);
 
 		if ($attributes !== []) {
 			$discriminatorEntry = $attributes[0]->newInstance();

@@ -6,14 +6,14 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Router
  * @since          1.0.0
  *
- * @date           23.22.24
+ * @date           16.06.24
  */
 
-namespace FastyBird\Library\Application\Router;
+namespace FastyBird\Core\Application\Router;
 
 use Nette\Application;
 
@@ -25,7 +25,17 @@ use Nette\Application;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class AppRouter extends Application\Routers\RouteList
+final class AppRouter
 {
+
+	public static function createRouter(Application\Routers\RouteList $router): void
+	{
+		$list = $router->withModule('App');
+
+		$list->addRoute('/', [
+			'presenter' => 'Default',
+			'action' => 'default',
+		]);
+	}
 
 }

@@ -6,41 +6,43 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     DI
  * @since          1.0.0
  *
- * @date           08.03.20
+ * @date           16.06.24
  */
 
-namespace FastyBird\Library\Application\DI;
+namespace FastyBird\Core\Application\DI;
 
-use FastyBird\Library\Application\Boot;
-use FastyBird\Library\Application\EventLoop;
-use FastyBird\Library\Application\Helpers;
-use FastyBird\Library\Application\Router;
-use FastyBird\Library\Application\Subscribers;
-use FastyBird\Library\Application\UI;
-use FastyBird\Library\Application\Utilities;
+use FastyBird\Core\Application\Boot;
+use FastyBird\Core\Application\Documents;
+use FastyBird\Core\Application\EventLoop;
+use FastyBird\Core\Application\Exceptions;
+use FastyBird\Core\Application\Router;
+use FastyBird\Core\Application\Subscribers;
+use FastyBird\Core\Application\UI;
 use Monolog;
 use Nette;
+use Nette\Application;
 use Nette\Bootstrap;
+use Nette\Caching;
 use Nette\DI;
 use Nette\Schema;
-use Sentry;
 use stdClass;
 use Symfony\Bridge\Monolog as SymfonyMonolog;
+use function array_values;
 use function assert;
 use function class_exists;
-use function getenv;
-use function interface_exists;
+use function is_dir;
 use function is_string;
+use function sprintf;
 use const DIRECTORY_SEPARATOR;
 
 /**
- * App application extension container
+ * FastyBird application
  *
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     DI
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
@@ -48,7 +50,9 @@ use const DIRECTORY_SEPARATOR;
 class ApplicationExtension extends DI\CompilerExtension
 {
 
-	public const NAME = 'fbApplicationLibrary';
+	public const NAME = 'fbApplication';
+
+	public const DRIVER_TAG = 'fastybird.application.attribute.driver';
 
 	public static function register(
 		Boot\Configurator $config,
@@ -89,15 +93,16 @@ class ApplicationExtension extends DI\CompilerExtension
 					),
 				],
 			),
-			'sentry' => Schema\Expect::structure(
-				[
-					'dsn' => Schema\Expect::string()->nullable(),
-					'level' => Schema\Expect::int(Monolog\Level::Warning),
-				],
-			),
+			'documents' => Schema\Expect::structure([
+				'mapping' => Schema\Expect::arrayOf(Schema\Expect::string(), Schema\Expect::string())->required(),
+				'excludePaths' => Schema\Expect::arrayOf(Schema\Expect::string(), Schema\Expect::string()),
+			]),
 		]);
 	}
 
+	/**
+	 * @throws Exceptions\InvalidState
+	 */
 	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
@@ -144,13 +149,11 @@ class ApplicationExtension extends DI\CompilerExtension
 		 * HELPERS
 		 */
 
-		$builder->addDefinition($this->prefix('helpers.eventLoop'), new DI\Definitions\ServiceDefinition())
+		$builder->addDefinition($this->prefix('eventLoop.wrapper'), new DI\Definitions\ServiceDefinition())
 			->setType(EventLoop\Wrapper::class);
 
-		if (class_exists('\Doctrine\DBAL\Connection') && class_exists('\Doctrine\ORM\EntityManager')) {
-			$builder->addDefinition($this->prefix('helpers.database'), new DI\Definitions\ServiceDefinition())
-				->setType(Helpers\Database::class);
-		}
+		$builder->addDefinition($this->prefix('eventLoop.status'), new DI\Definitions\ServiceDefinition())
+			->setType(EventLoop\Status::class);
 
 		/**
 		 * SUBSCRIBERS
@@ -174,56 +177,7 @@ class ApplicationExtension extends DI\CompilerExtension
 		}
 
 		$builder->addDefinition($this->prefix('subscribers.eventLoop'), new DI\Definitions\ServiceDefinition())
-			->setType(Subscribers\EventLoop::class);
-
-		/**
-		 * SENTRY ISSUES LOGGER
-		 */
-
-		if (interface_exists('\Sentry\ClientInterface')) {
-			$builder->addDefinition($this->prefix('helpers.sentry'), new DI\Definitions\ServiceDefinition())
-				->setType(Helpers\Sentry::class);
-		}
-
-		if (
-			isset($_ENV['FB_APP_PARAMETER__SENTRY_DSN'])
-			&& is_string($_ENV['FB_APP_PARAMETER__SENTRY_DSN'])
-			&& $_ENV['FB_APP_PARAMETER__SENTRY_DSN'] !== ''
-		) {
-			$sentryDSN = $_ENV['FB_APP_PARAMETER__SENTRY_DSN'];
-
-		} elseif (
-			getenv('FB_APP_PARAMETER__SENTRY_DSN') !== false
-			&& getenv('FB_APP_PARAMETER__SENTRY_DSN') !== ''
-		) {
-			$sentryDSN = getenv('FB_APP_PARAMETER__SENTRY_DSN');
-
-		} elseif ($configuration->sentry->dsn !== null) {
-			$sentryDSN = $configuration->sentry->dsn;
-
-		} else {
-			$sentryDSN = null;
-		}
-
-		if (is_string($sentryDSN) && $sentryDSN !== '') {
-			$builder->addDefinition($this->prefix('sentry.handler'), new DI\Definitions\ServiceDefinition())
-				->setType(Sentry\Monolog\Handler::class)
-				->setArgument('level', $configuration->logging->sentry->level);
-
-			$sentryClientBuilderService = $builder->addDefinition(
-				$this->prefix('sentry.clientBuilder'),
-				new DI\Definitions\ServiceDefinition(),
-			)
-				->setFactory('Sentry\ClientBuilder::create')
-				->setArguments([['dsn' => $sentryDSN]]);
-
-			$builder->addDefinition($this->prefix('sentry.client'), new DI\Definitions\ServiceDefinition())
-				->setType(Sentry\ClientInterface::class)
-				->setFactory([$sentryClientBuilderService, 'getClient']);
-
-			$builder->addDefinition($this->prefix('sentry.hub'), new DI\Definitions\ServiceDefinition())
-				->setType(Sentry\State\Hub::class);
-		}
+			->setType(Subscribers\EventLoopLifeCycle::class);
 
 		/**
 		 * UI
@@ -233,17 +187,57 @@ class ApplicationExtension extends DI\CompilerExtension
 			->setType(UI\TemplateFactory::class);
 
 		$builder->addDefinition($this->prefix('ui.routes'), new DI\Definitions\ServiceDefinition())
-			->setType(Router\AppRouter::class);
+			->setType(Nette\Application\Routers\RouteList::class);
 
 		/**
-		 * Utilities
+		 * DOCUMENTS SERVICES
 		 */
 
-		$builder->addDefinition($this->prefix('utilities.doctrineDateProvider'), new DI\Definitions\ServiceDefinition())
-			->setType(Utilities\DateTimeProvider::class);
+		$metadataCache = $builder->addDefinition(
+			$this->prefix('document.cache'),
+			new DI\Definitions\ServiceDefinition(),
+		)
+			->setType(Caching\Cache::class)
+			->setArguments([
+				'namespace' => 'metadata_class_metadata',
+			])
+			->setAutowired(false);
 
-		$builder->addDefinition($this->prefix('utilities.eventLoop.status'), new DI\Definitions\ServiceDefinition())
-			->setType(Utilities\EventLoopStatus::class);
+		$builder->addDefinition('document.factory', new DI\Definitions\ServiceDefinition())
+			->setType(Documents\DocumentFactory::class);
+
+		$attributeDriver = $builder->addDefinition(
+			'document.mapping.attributeDriver',
+			new DI\Definitions\ServiceDefinition(),
+		)
+			->setType(Documents\Mapping\Driver\AttributeDriver::class)
+			->setArguments([
+				'paths' => array_values($configuration->documents->mapping),
+			])
+			->addSetup('addExcludePaths', [$configuration->documents->excludePaths])
+			->addTag(self::DRIVER_TAG)
+			->setAutowired(false);
+
+		$mappingDriver = $builder->addDefinition(
+			'document.mapping.mappingDriver',
+			new DI\Definitions\ServiceDefinition(),
+		)
+			->setType(Documents\Mapping\Driver\MappingDriverChain::class);
+
+		$builder->addDefinition('document.mapping.classMetadataFactory', new DI\Definitions\ServiceDefinition())
+			->setType(Documents\Mapping\ClassMetadataFactory::class)
+			->setArguments([
+				'driver' => $mappingDriver,
+				'cache' => $metadataCache,
+			]);
+
+		foreach ($configuration->documents->mapping as $namespace => $path) {
+			if (!is_dir($path)) {
+				throw new Exceptions\InvalidState(sprintf('Given mapping path "%s" does not exist', $path));
+			}
+
+			$mappingDriver->addSetup('addDriver', [$attributeDriver, $namespace]);
+		}
 	}
 
 	/**
@@ -285,25 +279,6 @@ class ApplicationExtension extends DI\CompilerExtension
 		}
 
 		/**
-		 * SENTRY
-		 */
-
-		$sentryHandlerServiceName = $builder->getByType(Sentry\Monolog\Handler::class);
-
-		if ($sentryHandlerServiceName !== null) {
-			$monologLoggerServiceName = $builder->getByType(Monolog\Logger::class);
-			assert(is_string($monologLoggerServiceName));
-
-			$monologLoggerService = $builder->getDefinition($monologLoggerServiceName);
-			assert($monologLoggerService instanceof DI\Definitions\ServiceDefinition);
-
-			$sentryHandlerService = $builder->getDefinition($this->prefix('sentry.handler'));
-			assert($sentryHandlerService instanceof DI\Definitions\ServiceDefinition);
-
-			$monologLoggerService->addSetup('?->pushHandler(?)', ['@self', $sentryHandlerService]);
-		}
-
-		/**
 		 * DOCTRINE
 		 */
 
@@ -321,6 +296,40 @@ class ApplicationExtension extends DI\CompilerExtension
 					$builder->getDefinitionByType(Subscribers\EntityDiscriminator::class),
 				]);
 		}
+
+		/**
+		 * ROUTES
+		 */
+
+		$appRouterServiceName = $builder->getByType(Application\Routers\RouteList::class);
+		assert(is_string($appRouterServiceName));
+		$appRouterService = $builder->getDefinition($appRouterServiceName);
+		assert($appRouterService instanceof DI\Definitions\ServiceDefinition);
+
+		$appRouterService->addSetup([Router\AppRouter::class, 'createRouter'], [$appRouterService]);
+
+		/**
+		 * UI
+		 */
+
+		$presenterFactoryService = $builder->getDefinitionByType(Application\IPresenterFactory::class);
+
+		if ($presenterFactoryService instanceof DI\Definitions\ServiceDefinition) {
+			$presenterFactoryService->addSetup('setMapping', [[
+				'App' => 'FastyBird\Core\Application\Presenters\*Presenter',
+			]]);
+		}
+
+		$templateFactoryService = $builder->getDefinitionByType(UI\TemplateFactory::class);
+		assert($templateFactoryService instanceof DI\Definitions\ServiceDefinition);
+
+		$templateFactoryService->addSetup(
+			'registerLayout',
+			[
+				__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
+				. 'templates' . DIRECTORY_SEPARATOR . '@layout.latte',
+			],
+		);
 	}
 
 }

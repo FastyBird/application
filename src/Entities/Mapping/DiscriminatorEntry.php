@@ -6,14 +6,14 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Doctrine
  * @since          1.0.0
  *
  * @date           06.02.24
  */
 
-namespace FastyBird\Library\Application\Entities\Mapping;
+namespace FastyBird\Core\Application\Entities\Mapping;
 
 use Attribute;
 use Doctrine\ORM\Mapping as ORMMapping;
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORMMapping;
 /**
  * Entity discriminator item attribute for Doctrine2
  *
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Doctrine
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>

@@ -6,14 +6,14 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Boot
  * @since          1.0.0
  *
  * @date           25.10.22
  */
 
-namespace FastyBird\Library\Application\Boot;
+namespace FastyBird\Core\Application\Boot;
 
 use Composer\Autoload\ClassLoader;
 use Nette\Bootstrap;
@@ -37,7 +37,7 @@ use const PHP_VERSION_ID;
 /**
  * Extended container configurator
  *
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Boot
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>

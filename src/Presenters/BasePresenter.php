@@ -6,17 +6,17 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Presenters
  * @since          1.0.0
  *
  * @date           16.06.24
  */
 
-namespace FastyBird\Library\Application\Presenters;
+namespace FastyBird\Core\Application\Presenters;
 
-use FastyBird\Library\Application\Exceptions;
-use FastyBird\Library\Application\UI;
+use FastyBird\Core\Application\Exceptions;
+use FastyBird\Core\Application\UI;
 use FastyBird\SimpleAuth\Application as SimpleAuthApplication;
 use Nette\Application;
 use function preg_match;
@@ -24,7 +24,7 @@ use function preg_match;
 /**
  * Base application presenter
  *
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Presenters
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
@@ -59,6 +59,19 @@ abstract class BasePresenter extends Application\UI\Presenter
 		}
 
 		return $this->templateFactory?->getLayouts() ?? [];
+	}
+
+	public function formatTemplateFiles(): array
+	{
+		[, $presenter] = Application\Helpers::splitName($this->getName() ?? '');
+
+		$dir = __DIR__ . '/../../templates/';
+
+		return [
+			"$dir/presenters/$presenter/$this->view.latte",
+			"$dir/presenters/$presenter.$this->view.latte",
+			"$dir/presenters/$presenter.latte",
+		];
 	}
 
 }

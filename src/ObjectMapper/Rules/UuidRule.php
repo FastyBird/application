@@ -6,14 +6,14 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     ObjectMapper
  * @since          1.0.0
  *
  * @date           02.08.23
  */
 
-namespace FastyBird\Library\Application\ObjectMapper\Rules;
+namespace FastyBird\Core\Application\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper;
 use Ramsey\Uuid;

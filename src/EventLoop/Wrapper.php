@@ -6,16 +6,16 @@
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Helpers
  * @since          1.0.0
  *
  * @date           02.01.24
  */
 
-namespace FastyBird\Library\Application\EventLoop;
+namespace FastyBird\Core\Application\EventLoop;
 
-use FastyBird\Library\Application\Events;
+use FastyBird\Core\Application\Events;
 use Psr\EventDispatcher;
 use React\EventLoop as ReactEventLoop;
 use function error_get_last;
@@ -31,7 +31,7 @@ use const SIGTERM;
 /**
  * React event loop wrapper
  *
- * @package        FastyBird:ApplicationLibrary!
+ * @package        FastyBird:Application!
  * @subpackage     Helpers
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
